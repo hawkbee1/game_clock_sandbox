@@ -1,5 +1,5 @@
-name: flutter_everywhere
-description: Mobile, Web, Desktop, Server, CLI
+name: game_clock
+description: A multi-clock application to board games
 version: 1.0.0+1
 
 environment:
