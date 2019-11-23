@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:shelf/shelf.dart' as shelf;
 
-import 'controllers/index.dart';
 import 'response.dart';
 
 class Router {
@@ -20,7 +19,6 @@ class Router {
         "version": 'v1.0.0',
         "status": "ok",
       }).ok(),
-      'counter': CounterController().result(request),
     };
   }
 }
