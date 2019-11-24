@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_clock/features/clock/presentation/pages/clock_page.dart';
 
 import 'plugins/desktop/desktop.dart';
 
@@ -16,23 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Clock for your games'),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  final String title;
-  MyHomePage({this.title});
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title),),
-      body: Center(
-        child: Text('Clock will soon be here'),
-      ),
+      home: ClockPage(title: 'Clock for your games'),
     );
   }
 }

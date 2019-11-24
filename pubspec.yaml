@@ -9,6 +9,9 @@ dependencies:
   flutter:
     sdk: flutter
   shelf: ^0.7.5
+  equatable: ^1.0.0
+  data_connection_checker: ^0.3.4
+  dartz: ^0.8.8
 
   cupertino_icons: ^0.1.2
 
