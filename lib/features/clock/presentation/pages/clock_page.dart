@@ -33,8 +33,11 @@ class ClockPage extends StatelessWidget {
                   child: StopClockButton(),
                 ),
               ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Clock(),
             )
-
         ],),
       ),
     );
