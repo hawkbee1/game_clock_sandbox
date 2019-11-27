@@ -13,6 +13,8 @@ dependencies:
   data_connection_checker: ^0.3.4
   dartz: ^0.8.8
   shared_preferences: ^0.5.4+6
+  rxdart: ^0.22.6
+  get_it: ^3.0.3
 
 dev_dependencies:
   flutter_test:
