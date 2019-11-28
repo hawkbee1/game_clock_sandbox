@@ -13,6 +13,7 @@ class MyStopwatchTimer {
   final Duration frequency;
   final _controller = StreamController<Duration>();
 
+  Timer _timer;
   Duration _elapsed;
   Duration get elapsed => _elapsed;
   Stream<Duration> get stream => _controller.stream;
@@ -21,11 +22,26 @@ class MyStopwatchTimer {
 
   _init() {
     _elapsed = Duration();
-    Timer.periodic(frequency, (t) {
+    createTimer();
+  }
+
+  void createTimer() {
+    _timer = Timer.periodic(frequency, (t) {
       _controller.add(_elapsed);
       _elapsed += frequency;
     });
   }
+
+  stop() {
+//    need just to dispose the timer... I think
+  _timer.cancel();
+  }
+
+  start() {
+//    same as init with _elapsed as stating value
+    createTimer();
+  }
+
 }
 
 class MyStopwatch {
@@ -69,6 +85,10 @@ class PersistedMyStopwatch {
   Duration get elapsed => _stopwatch.elapsed;
 
   void reset() => _stopwatch.reset();
+
+  void stop() => _stopwatch.stop();
+
+  void start() => _stopwatch.start();
 
   dispose() => _controller?.close();
 }

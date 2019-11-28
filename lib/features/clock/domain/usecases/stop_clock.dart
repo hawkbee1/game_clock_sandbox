@@ -6,7 +6,7 @@ class StopClockButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final stopwatch = StopwatchProvider.of(context);
     return FloatingActionButton(
-      onPressed: () => stopwatch.reset(),
+      onPressed: () => stopwatch.stop(),
     child: IconButton(icon: Icon(Icons.stop), onPressed: null),);
   }
 }

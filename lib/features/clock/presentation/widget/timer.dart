@@ -3,7 +3,7 @@ import 'package:game_clock/core/strings/widgets_keys.dart';
 import 'package:game_clock/core/util/utils.dart';
 import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
 
-class Clock extends StatelessWidget {
+class Timer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stopwatch = StopwatchProvider.of(context);

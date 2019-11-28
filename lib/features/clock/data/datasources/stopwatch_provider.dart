@@ -33,4 +33,6 @@ class StopwatchProvider extends InheritedWidget {
 
   /// Reset the countdown
   void reset() => _stopwatch.reset();
+  void start() => _stopwatch.start();
+  void stop() => _stopwatch.stop();
 }
