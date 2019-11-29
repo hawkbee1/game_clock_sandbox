@@ -9,7 +9,7 @@ void main() {
 
     testWidgets('check label elements of login page are here', (WidgetTester tester) async {
       await tester.pumpWidget(MyClockPage());
-      final clockFinder = find.byKey(Key(CLOCK));
+      final clockFinder = find.byKey(Key(GLOBAL_TIMER));
       final buttonsFinder = find.byType(FloatingActionButton);
 
       expect(clockFinder, findsOneWidget);

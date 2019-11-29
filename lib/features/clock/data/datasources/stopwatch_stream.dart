@@ -21,7 +21,11 @@ class MyStopwatchTimer {
   void reset() => _elapsed = Duration();
 
   _init() {
-    _elapsed = Duration();
+    _elapsed = Duration(seconds: 0);
+    _timer = Timer.periodic(frequency, (t)
+    {
+      _controller.add(_elapsed);
+    });
   }
 
   void createTimer() {
@@ -37,7 +41,8 @@ class MyStopwatchTimer {
   }
 
   start() {
-//    same as init with _elapsed as stating value
+    _timer.cancel();
+
     createTimer();
   }
 

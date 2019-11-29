@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
 import 'package:game_clock/features/clock/presentation/pages/clock_page.dart';
-
+import 'package:game_clock/injection_container.dart' as di;
 import 'plugins/desktop/desktop.dart';
 
-void main() {
+void main() async {
   setTargetPlatformForDesktop();
+  await di.init();
   runApp(MyApp());
 }
 
@@ -18,10 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: StopwatchProvider(
-        frequency: Duration(seconds: 1),
-        child: ClockPage(title: 'Clock for your games'),
-      ),
+      home: ClockPage(title: 'Clock for your games'),
     );
   }
 }

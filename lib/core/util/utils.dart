@@ -1,5 +1,5 @@
 /// Returns a human-readable representation of a duration
-String prettyPrintDuration(Duration duration, [showSeparator = true]) {
+String prettyPrintDuration(Duration duration, [showSeparator = true]){
   final hours = duration.inHours % 24;
   final minutes = duration.inMinutes % 60;
   final seconds = duration.inSeconds % 60;
