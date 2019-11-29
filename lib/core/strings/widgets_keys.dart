@@ -1,1 +1,1 @@
-const String CLOCK = "CLOCK";
+const String GLOBAL_TIMER = "GLOBAL CLOCK";
