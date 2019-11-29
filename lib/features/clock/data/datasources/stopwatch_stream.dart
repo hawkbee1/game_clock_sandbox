@@ -22,7 +22,6 @@ class MyStopwatchTimer {
 
   _init() {
     _elapsed = Duration();
-    createTimer();
   }
 
   void createTimer() {
