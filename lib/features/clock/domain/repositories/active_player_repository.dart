@@ -18,7 +18,7 @@ class ActivePlayer {
   void nextPlayer() {
     _playerList = sl();
     debugPrint('nextPlayer tapped ${_playerList.players.length}');
-    stop();
+    pause();
     if(index == _playerList.players.length - 1) {
       debugPrint('first');
 
@@ -29,15 +29,14 @@ class ActivePlayer {
       index++;
       _activePlayer = _playerList.players.elementAt(index);
     }
-    start();
   }
 
   void start() {
     _activePlayer.stopwatch.start();
   }
 
-  void stop() {
-    _activePlayer.stopwatch.stop();
+  void pause() {
+    _activePlayer.stopwatch.pause();
   }
 
   Stream<Duration> get stream => _activePlayer.stopwatch.stream;

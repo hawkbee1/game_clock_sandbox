@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:game_clock/core/strings/widgets_keys.dart';
 import 'package:game_clock/core/util/utils.dart';
+import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
 import 'package:game_clock/features/clock/domain/repositories/active_player_repository.dart';
 import 'package:game_clock/injection_container.dart';
 
@@ -9,41 +12,95 @@ class PlayerTimer extends StatefulWidget {
   _PlayerTimerState createState() => _PlayerTimerState();
 }
 
-class _PlayerTimerState extends State<PlayerTimer> {
-  ActivePlayer activePlayer;
+class _PlayerTimerState extends State<PlayerTimer> with TickerProviderStateMixin {
+  ActivePlayer _activePlayer;
+  StopwatchProvider _stopwatchProvider;
   Stream<Duration> stream;
+  AnimationController _controller;
 
   @override
   void initState() {
-    // TODO: implement initState
-    activePlayer = sl();
-    stream = activePlayer.stream;
     super.initState();
+    _activePlayer = sl();
+    _stopwatchProvider = sl();
+    stream = _activePlayer.stream;
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 250), value: 1);
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          activePlayer.nextPlayer();
-          stream = activePlayer.stream;
-        });
+      onTap: () async {
+          await _controller.reverse();
+          setState(() {
+            _activePlayer.nextPlayer();
+            stream = _activePlayer.stream;
+            if(_stopwatchProvider.state) _activePlayer.start();
+          });
+          await _controller.forward();
       },
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform(
+            transform: Matrix4.rotationX((1 - _controller.value) * pi / 2),
+            alignment: Alignment.center,
+            child: Container(
+              height: 100,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 12),
+              alignment: Alignment.center,
+              child: tmp_Clock(stream: stream,),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class tmp_Clock extends StatelessWidget {
+  const tmp_Clock({
+    Key key,
+    @required this.stream,
+  }) : super(key: key);
+
+  final Stream<Duration> stream;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15.0),
       child: Container(
-        key: Key(GLOBAL_TIMER),
-        child: StreamBuilder<Duration>(
-          stream: stream,
-          builder: (context, snapshot) {
-            return Text(
-              prettyPrintDuration(snapshot.data),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 60,
-                color: Colors.black,
-              ),
-            );
-          }
+        color: Colors.red,
+        child: Center(
+          child: Container(
+            key: Key(GLOBAL_TIMER),
+            child: Column(
+              children: <Widget>[
+                StreamBuilder<Duration>(
+                    stream: stream,
+                    builder: (context, snapshot) {
+                      return Text(
+                        prettyPrintDuration(snapshot.data),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 60,
+                          color: Colors.black,
+                        ),
+                      );
+                    }
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

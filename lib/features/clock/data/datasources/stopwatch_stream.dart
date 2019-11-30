@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:game_clock/features/clock/data/datasources/persistence.dart';
 
 
@@ -17,8 +16,15 @@ class MyStopwatchTimer {
   Duration _elapsed;
   Duration get elapsed => _elapsed;
   Stream<Duration> get stream => _controller.stream;
+//  _state false means stopwatch is stopped and true means stopwatch is running
+  bool _state = false;
+  bool get state => _state;
 
-  void reset() => _elapsed = Duration();
+  void reset() {
+    pause();
+    _elapsed = Duration();
+    _state = false;
+  }
 
   _init() {
     _elapsed = Duration(seconds: 0);
@@ -35,35 +41,18 @@ class MyStopwatchTimer {
     });
   }
 
-  stop() {
+  pause() {
 //    need just to dispose the timer... I think
   _timer.cancel();
+  _state  = false;
   }
 
   start() {
     _timer.cancel();
-
     createTimer();
+    _state = true;
   }
 
-}
-
-class MyStopwatch {
-  MyStopwatch({
-        this.frequency = const Duration(seconds: 1),
-      });
-
-  final Duration frequency;
-
-  Duration _elapsed;
-  Duration get remaining => _elapsed;
-
-  Stream<Duration> get stream async* {
-    _elapsed = Duration();
-      yield _elapsed;
-      _elapsed += frequency;
-      await Future.delayed(frequency);
-  }
 }
 
 class PersistedMyStopwatch {
@@ -88,9 +77,11 @@ class PersistedMyStopwatch {
   Stream<Duration> get stream => _controller.stream;
   Duration get elapsed => _stopwatch.elapsed;
 
+  bool get state => _stopwatch.state;
+
   void reset() => _stopwatch.reset();
 
-  void stop() => _stopwatch.stop();
+  void pause() => _stopwatch.pause();
 
   void start() => _stopwatch.start();
 

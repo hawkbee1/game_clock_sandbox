@@ -20,9 +20,10 @@ class StopwatchProvider {
 
   Stream<Duration> get stream => _subject.stream;
   Duration get elapsed => _subject.value;
+  bool get state => _stopwatch.state;
 
   /// Reset the countdown
   void reset() => _stopwatch.reset();
   void start() => _stopwatch.start();
-  void stop() => _stopwatch.stop();
+  void pause() => _stopwatch.pause();
 }
