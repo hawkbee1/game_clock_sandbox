@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:game_clock/core/strings/widgets_keys.dart';
 import 'package:game_clock/core/util/utils.dart';
 import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
+import 'package:game_clock/features/clock/domain/entities/player.dart';
 import 'package:game_clock/features/clock/domain/repositories/active_player_repository.dart';
 import 'package:game_clock/injection_container.dart';
 
@@ -12,13 +13,12 @@ class PlayerTimer extends StatefulWidget {
   _PlayerTimerState createState() => _PlayerTimerState();
 }
 
-class _PlayerTimerState extends State<PlayerTimer> with TickerProviderStateMixin {
+class _PlayerTimerState extends State<PlayerTimer>
+    with TickerProviderStateMixin {
   ActivePlayer _activePlayer;
   StopwatchProvider _stopwatchProvider;
   Stream<Duration> stream;
-  String player;
   AnimationController _controller;
-
 
   @override
   void initState() {
@@ -26,8 +26,8 @@ class _PlayerTimerState extends State<PlayerTimer> with TickerProviderStateMixin
     _activePlayer = sl();
     _stopwatchProvider = sl();
     stream = _activePlayer.stream;
-    player = _activePlayer.player;
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 250), value: 1);
+    _controller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 250), value: 1);
   }
 
   @override
@@ -38,17 +38,15 @@ class _PlayerTimerState extends State<PlayerTimer> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () async {
-          await _controller.reverse();
-          setState(() {
-            _activePlayer.nextPlayer();
-            stream = _activePlayer.stream;
-            player = _activePlayer.player;
-            if(_stopwatchProvider.state) _activePlayer.start();
-          });
-          await _controller.forward();
+        await _controller.reverse();
+        setState(() {
+          _activePlayer.nextPlayer();
+          stream = _activePlayer.stream;
+          if (_stopwatchProvider.state) _activePlayer.start();
+        });
+        await _controller.forward();
       },
       child: AnimatedBuilder(
         animation: _controller,
@@ -60,7 +58,7 @@ class _PlayerTimerState extends State<PlayerTimer> with TickerProviderStateMixin
               margin: EdgeInsets.symmetric(horizontal: 20),
               padding: EdgeInsets.symmetric(vertical: 12),
               alignment: Alignment.center,
-              child: tmp_Clock(stream: stream, player: player),
+              child: tmp_Clock(stream: stream, player: _activePlayer.player),
             ),
           );
         },
@@ -74,12 +72,10 @@ class tmp_Clock extends StatelessWidget {
     Key key,
     @required this.stream,
     @required this.player,
-    @required this.color,
   }) : super(key: key);
 
   final Stream<Duration> stream;
-  final String player;
-  final Color color;
+  final Player player;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +84,7 @@ class tmp_Clock extends StatelessWidget {
       child: Container(
         height: 200.0,
         key: Key(GLOBAL_TIMER),
-        color: color,
+        color: player.color,
         child: Center(
           child: StreamBuilder<Duration>(
               stream: stream,
@@ -97,11 +93,12 @@ class tmp_Clock extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                        'Player: $player',
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.black,
-                    ),),
+                      'Player: ${player.toString()}',
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: Colors.black,
+                      ),
+                    ),
                     Text(
                       prettyPrintDuration(snapshot.data),
                       style: TextStyle(
@@ -112,8 +109,7 @@ class tmp_Clock extends StatelessWidget {
                     ),
                   ],
                 );
-              }
-          ),
+              }),
         ),
       ),
     );

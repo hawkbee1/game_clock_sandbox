@@ -4,14 +4,14 @@ import 'package:game_clock/features/clock/domain/repositories/player_list.dart';
 import 'package:game_clock/injection_container.dart';
 
 class ActivePlayer {
-  ActivePlayer({this.playerList}): 
-      assert(playerList != null),
+  ActivePlayer({this.playerList})
+      : assert(playerList != null),
         _playerList = playerList,
-  _activePlayer = playerList.players.elementAt(0);
+        _activePlayer = playerList.players.elementAt(0);
 
   final PlayerList playerList;
   PlayerList _playerList;
-  
+
   Player _activePlayer;
   int index = 0;
 
@@ -19,7 +19,7 @@ class ActivePlayer {
     _playerList = sl();
     debugPrint('nextPlayer tapped ${_playerList.players.length}');
     pause();
-    if(index == _playerList.players.length - 1) {
+    if (index == _playerList.players.length - 1) {
       debugPrint('first');
 
       _activePlayer = _playerList.players.elementAt(0);
@@ -41,6 +41,5 @@ class ActivePlayer {
 
   Stream<Duration> get stream => _activePlayer.stopwatch.stream;
 
-  String get player => _activePlayer.playerId.toString();
-
+  Player get player => _activePlayer;
 }

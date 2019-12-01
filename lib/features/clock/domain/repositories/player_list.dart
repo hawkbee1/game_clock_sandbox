@@ -7,6 +7,18 @@ class PlayerList {
   List<Player> _list = [];
   int _nbPlayers = 0;
   final _controller = StreamController<int>.broadcast();
+  static const List<Color> colorList = [
+    Colors.brown,
+    Colors.green,
+    Colors.deepOrange,
+    Colors.tealAccent,
+    Colors.yellowAccent,
+    Colors.redAccent,
+    Colors.deepPurple,
+    Colors.limeAccent,
+    Colors.lightBlueAccent,
+    Colors.pinkAccent,
+  ];
 
   PlayerList() {
     _controller.add(_nbPlayers);
@@ -18,11 +30,11 @@ class PlayerList {
 
   addPlayer() {
     _nbPlayers++;
-    Player _player = Player(playerId: _nbPlayers);
+    Color _color = colorList.elementAt((_nbPlayers % 10));
+    Player _player = Player(playerId: _nbPlayers, color: _color);
     debugPrint(_player.toString());
     _list.add(_player);
     _controller.add(_nbPlayers);
-
   }
 
   reset() {

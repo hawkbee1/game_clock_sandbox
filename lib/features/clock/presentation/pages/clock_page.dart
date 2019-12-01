@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:game_clock/features/clock/domain/repositories/player_list.dart';
 import 'package:game_clock/features/clock/domain/usecases/add_player.dart';
 import 'package:game_clock/features/clock/presentation/widget/global_clock.dart';
 import 'package:game_clock/features/clock/presentation/widget/nb_players.dart';
 import 'package:game_clock/features/clock/presentation/widget/player_clock.dart';
-import 'package:game_clock/injection_container.dart';
 
 class ClockPage extends StatelessWidget {
   final String title;
@@ -20,9 +18,7 @@ class ClockPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: <Widget>[
-            Transform.scale(
-              scale: 0.7,
-                child: GlobalClock()),
+            Transform.scale(scale: 0.7, child: GlobalClock()),
             Spacer(),
             PlayerClock(),
             Spacer(),
