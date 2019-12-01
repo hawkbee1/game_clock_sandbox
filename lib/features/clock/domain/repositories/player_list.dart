@@ -37,7 +37,20 @@ class PlayerList {
     _controller.add(_nbPlayers);
   }
 
+  removePlayer() {
+    _list.removeLast();
+    _nbPlayers--;
+    _controller.add(_nbPlayers);
+  }
+
   reset() {
-    _list.map((player) => player.stopwatch.reset());
+    debugPrint('going into reset');
+    debugPrint(_list.length.toString());
+    _list.forEach((toto) {
+      toto.stopwatch.pause();
+      toto.stopwatch.reset();
+      debugPrint('normaly done :-/');
+      debugPrint(toto.stopwatch.elapsed.toString());
+    });
   }
 }

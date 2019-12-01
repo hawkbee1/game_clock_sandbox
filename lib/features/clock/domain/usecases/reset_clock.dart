@@ -10,6 +10,7 @@ class ResetClockButton extends StatelessWidget {
     final PlayerList _playerList = sl();
     return FloatingActionButton(
       onPressed: () {
+        _stopwatchProvider.pause();
         _stopwatchProvider.reset();
         _playerList.reset();
       },

@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:game_clock/features/clock/data/datasources/persistence.dart';
-
 
 class MyStopwatchTimer {
   MyStopwatchTimer({
-        this.frequency = const Duration(seconds: 1),
-      }) {
+    this.frequency = const Duration(seconds: 1),
+  }) {
     _init();
   }
 
@@ -20,18 +20,12 @@ class MyStopwatchTimer {
   bool _state = false;
   bool get state => _state;
 
-  void reset() {
-    pause();
-    _elapsed = Duration();
-    _state = false;
-  }
-
   _init() {
     _elapsed = Duration(seconds: 0);
-    _timer = Timer.periodic(frequency, (t)
-    {
+    _timer = Timer.periodic(frequency, (t) {
       _controller.add(_elapsed);
     });
+    _state = false;
   }
 
   void createTimer() {
@@ -43,8 +37,8 @@ class MyStopwatchTimer {
 
   pause() {
 //    need just to dispose the timer... I think
-  _timer.cancel();
-  _state  = false;
+    _timer.cancel();
+    _state = false;
   }
 
   start() {
@@ -53,13 +47,16 @@ class MyStopwatchTimer {
     _state = true;
   }
 
+  void reset() {
+    _init();
+  }
+
 }
 
 class PersistedMyStopwatch {
-  PersistedMyStopwatch(
-      {
-        Duration frequency = const Duration(seconds: 1),
-      }) {
+  PersistedMyStopwatch({
+    Duration frequency = const Duration(seconds: 1),
+  }) {
     _init(frequency);
   }
 
