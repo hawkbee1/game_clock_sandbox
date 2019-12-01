@@ -41,4 +41,6 @@ class ActivePlayer {
 
   Stream<Duration> get stream => _activePlayer.stopwatch.stream;
 
+  String get player => _activePlayer.playerId.toString();
+
 }
