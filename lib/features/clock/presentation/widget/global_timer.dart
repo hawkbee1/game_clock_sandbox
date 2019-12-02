@@ -14,6 +14,7 @@ class GlobalTimer extends StatelessWidget {
       child: StreamBuilder<Duration>(
         stream: stopwatchProvider.stream,
         builder: (context, snapshot) {
+          if(!snapshot.hasData) return CircularProgressIndicator();
           return Text(
             prettyPrintDuration(snapshot.data),
             style: TextStyle(
