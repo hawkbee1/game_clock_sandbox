@@ -11,7 +11,7 @@ class RemovePlayerButton extends StatelessWidget {
     return FloatingActionButton(
       onPressed: () {
         debugPrint('length ${_playerList.players.length}');
-        if(_activePlayer.player.playerId == _playerList.players.elementAt(_playerList.players.length-1).playerId) {
+        if(_activePlayer.activePlayer.playerId == _playerList.players.elementAt(_playerList.players.length-1).playerId) {
           _activePlayer.nextPlayer();
         }
         if(_playerList.players.length > 1) _playerList.removePlayer();
