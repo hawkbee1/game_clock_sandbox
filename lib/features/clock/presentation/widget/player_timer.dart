@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:game_clock/core/strings/widgets_keys.dart';
 import 'package:game_clock/core/util/utils.dart';
 import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
+import 'package:game_clock/features/clock/domain/entities/player.dart';
 import 'package:game_clock/features/clock/domain/repositories/active_player_repository.dart';
 import 'package:game_clock/injection_container.dart';
 
@@ -24,7 +25,6 @@ class _PlayerTimerState extends State<PlayerTimer>
     super.initState();
     _activePlayer = sl();
     _stopwatchProvider = sl();
-    stream = _activePlayer.stream;
     _controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 125), value: 1);
   }
@@ -42,7 +42,6 @@ class _PlayerTimerState extends State<PlayerTimer>
         await _controller.reverse();
         setState(() {
           _activePlayer.nextPlayer();
-          stream = _activePlayer.stream;
           if (_stopwatchProvider.state) _activePlayer.start();
         });
         await _controller.forward();
@@ -57,7 +56,7 @@ class _PlayerTimerState extends State<PlayerTimer>
               margin: EdgeInsets.symmetric(horizontal: 20),
               padding: EdgeInsets.symmetric(vertical: 12),
               alignment: Alignment.center,
-              child: tmp_Clock(stream: stream),
+              child: PlayerClockPanel(),
             ),
           );
         },
@@ -66,49 +65,35 @@ class _PlayerTimerState extends State<PlayerTimer>
   }
 }
 
-class tmp_Clock extends StatelessWidget {
-  const tmp_Clock({
-    Key key,
-    @required this.stream,
-  }) : super(key: key);
-
-  final Stream<Duration> stream;
-
+class PlayerClockPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    ActivePlayer _activePlayer = sl();
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
       child: Container(
-        child: StreamBuilder<Duration>(
-            stream: stream,
+        child: StreamBuilder<Player>(
+            stream: _activePlayer.playerStream,
             builder: (context, snapshot) {
-              final ActivePlayer _activePlayer = sl();
-              if(!snapshot.hasData) {
+              if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
               return Container(
                 height: 200.0,
                 key: Key(GLOBAL_TIMER),
-                color: _activePlayer.player.color,
+                color: snapshot.data.color,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Player: ${_activePlayer.player.toString()}',
+                        'Player: ${snapshot.data.toString()}',
                         style: TextStyle(
                           fontSize: 40,
                           color: Colors.black,
                         ),
                       ),
-                      Text(
-                        prettyPrintDuration(snapshot.data),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 60,
-                          color: Colors.black,
-                        ),
-                      ),
+                      PlayerStopWatch(),
                     ],
                   ),
                 ),
@@ -116,5 +101,25 @@ class tmp_Clock extends StatelessWidget {
             }),
       ),
     );
+  }
+}
+
+class PlayerStopWatch extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final ActivePlayer _activePlayer = sl();
+    return StreamBuilder<Duration>(
+        stream: _activePlayer.timeStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return CircularProgressIndicator();
+          return Text(
+            prettyPrintDuration(snapshot.data),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 60,
+              color: Colors.black,
+            ),
+          );
+        });
   }
 }
