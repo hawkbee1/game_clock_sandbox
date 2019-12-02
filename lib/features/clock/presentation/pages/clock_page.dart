@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:game_clock/features/clock/domain/usecases/add_player.dart';
+import 'package:game_clock/features/clock/domain/usecases/remove_player.dart';
 import 'package:game_clock/features/clock/presentation/widget/global_clock.dart';
 import 'package:game_clock/features/clock/presentation/widget/nb_players.dart';
 import 'package:game_clock/features/clock/presentation/widget/player_clock.dart';
@@ -19,18 +20,27 @@ class ClockPage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Transform.scale(scale: 0.7, child: GlobalClock()),
-            Spacer(),
-            PlayerClock(),
-            Spacer(),
-            Container(
-              child: NbPlayers(),
-            ),
-            Spacer(),
+            Center(child: PlayerClock()),
           ],
         ),
       ),
       floatingActionButton:
-          AddPlayerButton(), // This trailing comma makes auto-formatting nicer for build methods.
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                child: NbPlayers(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: RemovePlayerButton(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: AddPlayerButton(),
+              ),
+            ],
+          ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
