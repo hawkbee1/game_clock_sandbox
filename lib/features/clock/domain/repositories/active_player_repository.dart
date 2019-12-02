@@ -1,4 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:game_clock/features/clock/domain/entities/player.dart';
 import 'package:game_clock/features/clock/domain/repositories/player_list.dart';
 import 'package:game_clock/injection_container.dart';
@@ -7,13 +9,16 @@ class ActivePlayer {
   ActivePlayer({this.playerList})
       : assert(playerList != null),
         _playerList = playerList,
-        _activePlayer = playerList.players.elementAt(0);
+        _activePlayer = playerList.players.elementAt(0) {
+    _controller.add(_activePlayer);
+  }
 
   final PlayerList playerList;
   PlayerList _playerList;
 
   Player _activePlayer;
   int index = 0;
+  final _controller = StreamController<Player>();
 
   void nextPlayer() {
     _playerList = sl();
@@ -29,6 +34,7 @@ class ActivePlayer {
       index++;
       _activePlayer = _playerList.players.elementAt(index);
     }
+    _controller.add(_activePlayer);
   }
 
   void start() {
@@ -39,7 +45,9 @@ class ActivePlayer {
     _activePlayer.stopwatch.pause();
   }
 
-  Stream<Duration> get stream => _activePlayer.stopwatch.stream;
+  Stream<Duration> get timeStream => _activePlayer.stopwatch.stream;
 
-  Player get player => _activePlayer;
+  Stream<Player> get playerStream => _controller.stream;
+  
+  Player get activePlayer => _activePlayer;
 }
