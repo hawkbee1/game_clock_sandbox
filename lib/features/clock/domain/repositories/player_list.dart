@@ -6,7 +6,7 @@ import 'package:game_clock/features/clock/domain/entities/player.dart';
 class PlayerList {
   List<Player> _list = [];
   int _nbPlayers = 0;
-  final _controller = StreamController<int>.broadcast();
+  final _controller = StreamController<int>();
   static const List<Color> colorList = [
     Colors.brown,
     Colors.green,
@@ -23,6 +23,7 @@ class PlayerList {
   PlayerList() {
     _controller.add(_nbPlayers);
     addPlayer();
+    debugPrint(_nbPlayers.toString());
   }
 
   List<Player> get players => _list;
@@ -32,7 +33,6 @@ class PlayerList {
     _nbPlayers++;
     Color _color = colorList.elementAt((_nbPlayers % 10));
     Player _player = Player(playerId: _nbPlayers, color: _color);
-    debugPrint(_player.toString());
     _list.add(_player);
     _controller.add(_nbPlayers);
   }
@@ -44,13 +44,9 @@ class PlayerList {
   }
 
   reset() {
-    debugPrint('going into reset');
-    debugPrint(_list.length.toString());
-    _list.forEach((toto) {
-      toto.stopwatch.pause();
-      toto.stopwatch.reset();
-      debugPrint('normaly done :-/');
-      debugPrint(toto.stopwatch.elapsed.toString());
+    _list.forEach((_player) {
+      _player.stopwatch.pause();
+      _player.stopwatch.reset();
     });
   }
 }

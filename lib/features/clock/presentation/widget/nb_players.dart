@@ -11,7 +11,7 @@ class NbPlayers extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if(!snapshot.hasData) return Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text('Number of players: 0'),
+          child: CircularProgressIndicator(),
         );
         return Padding(
           padding: const EdgeInsets.all(16.0),
