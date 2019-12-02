@@ -89,6 +89,9 @@ class tmp_Clock extends StatelessWidget {
           child: StreamBuilder<Duration>(
               stream: stream,
               builder: (context, snapshot) {
+                if(!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
