@@ -8,6 +8,11 @@ class PlayerClock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlayerTimer();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 32.0, 0.0, 0.0),
+      child: Tooltip(
+          message: 'Display active player number and its clock',
+          child: PlayerTimer()),
+    );
   }
 }

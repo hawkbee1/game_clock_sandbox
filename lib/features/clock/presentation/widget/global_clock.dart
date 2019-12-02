@@ -15,8 +15,8 @@ class GlobalClock extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: GlobalTimer(),
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+          child: Transform.scale(scale: 0.7, child: GlobalTimer()),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

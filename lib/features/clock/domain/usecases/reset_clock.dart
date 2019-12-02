@@ -9,11 +9,17 @@ class ResetClockButton extends StatelessWidget {
     final StopwatchProvider _stopwatchProvider = sl();
     final PlayerList _playerList = sl();
     return FloatingActionButton(
+      tooltip: 'Reset all the clocks',
       onPressed: () {
         _stopwatchProvider.pause();
         _stopwatchProvider.reset();
         _playerList.reset();
       },
-    child: IconButton(icon: Icon(Icons.stop), onPressed: null),);
+    child: Ink(
+      decoration: ShapeDecoration(
+        color: Colors.red,
+        shape: CircleBorder(),
+      ),
+        child: IconButton(icon: Icon(Icons.stop), onPressed: null)),);
   }
 }

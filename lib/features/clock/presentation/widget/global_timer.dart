@@ -11,19 +11,22 @@ class GlobalTimer extends StatelessWidget {
 
     return Container(
       key: Key(GLOBAL_TIMER),
-      child: StreamBuilder<Duration>(
-        stream: stopwatchProvider.stream,
-        builder: (context, snapshot) {
-          if(!snapshot.hasData) return CircularProgressIndicator();
-          return Text(
-            prettyPrintDuration(snapshot.data),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 60,
-              color: Colors.black,
-            ),
-          );
-        }
+      child: Tooltip(
+        message: 'Display global clock',
+        child: StreamBuilder<Duration>(
+          stream: stopwatchProvider.stream,
+          builder: (context, snapshot) {
+            if(!snapshot.hasData) return CircularProgressIndicator();
+            return Text(
+              prettyPrintDuration(snapshot.data),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 60,
+                color: Colors.black,
+              ),
+            );
+          }
+        ),
       ),
     );
   }

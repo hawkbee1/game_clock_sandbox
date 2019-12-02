@@ -9,6 +9,7 @@ class StopClockButton extends StatelessWidget {
     final StopwatchProvider _stopwatchProvider = sl();
     final ActivePlayer _activePlayer = sl();
     return FloatingActionButton(
+      tooltip: 'Pause all clocks',
       onPressed: () {
         _stopwatchProvider.pause();
         _activePlayer.pause();

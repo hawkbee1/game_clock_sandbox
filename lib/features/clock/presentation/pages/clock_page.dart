@@ -19,7 +19,7 @@ class ClockPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: <Widget>[
-            Transform.scale(scale: 0.7, child: GlobalClock()),
+            GlobalClock(),
             Center(child: PlayerClock()),
           ],
         ),

@@ -9,6 +9,7 @@ class StartClockButton extends StatelessWidget {
     final StopwatchProvider _stopwatchProvider = sl();
     final ActivePlayer _activePlayer = sl();
     return FloatingActionButton(
+      tooltip: 'Start global timer and active player',
       onPressed: () {
         _stopwatchProvider.start();
             _activePlayer.start();
