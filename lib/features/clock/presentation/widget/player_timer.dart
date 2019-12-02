@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:game_clock/core/strings/widgets_keys.dart';
 import 'package:game_clock/core/util/utils.dart';
 import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
-import 'package:game_clock/features/clock/domain/entities/player.dart';
 import 'package:game_clock/features/clock/domain/repositories/active_player_repository.dart';
 import 'package:game_clock/injection_container.dart';
 
@@ -58,7 +57,7 @@ class _PlayerTimerState extends State<PlayerTimer>
               margin: EdgeInsets.symmetric(horizontal: 20),
               padding: EdgeInsets.symmetric(vertical: 12),
               alignment: Alignment.center,
-              child: tmp_Clock(stream: stream, player: _activePlayer.player),
+              child: tmp_Clock(stream: stream),
             ),
           );
         },
@@ -71,49 +70,50 @@ class tmp_Clock extends StatelessWidget {
   const tmp_Clock({
     Key key,
     @required this.stream,
-    @required this.player,
   }) : super(key: key);
 
   final Stream<Duration> stream;
-  final Player player;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
       child: Container(
-        height: 200.0,
-        key: Key(GLOBAL_TIMER),
-        color: player.color,
-        child: Center(
-          child: StreamBuilder<Duration>(
-              stream: stream,
-              builder: (context, snapshot) {
-                if(!snapshot.hasData) {
-                  return CircularProgressIndicator();
-                }
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Player: ${player.toString()}',
-                      style: TextStyle(
-                        fontSize: 40,
-                        color: Colors.black,
+        child: StreamBuilder<Duration>(
+            stream: stream,
+            builder: (context, snapshot) {
+              final ActivePlayer _activePlayer = sl();
+              if(!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              }
+              return Container(
+                height: 200.0,
+                key: Key(GLOBAL_TIMER),
+                color: _activePlayer.player.color,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Player: ${_activePlayer.player.toString()}',
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    Text(
-                      prettyPrintDuration(snapshot.data),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 60,
-                        color: Colors.black,
+                      Text(
+                        prettyPrintDuration(snapshot.data),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 60,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }),
-        ),
+                    ],
+                  ),
+                ),
+              );
+            }),
       ),
     );
   }
