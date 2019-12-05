@@ -12,35 +12,46 @@ class ClockPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? true
+            : false;
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text(title)),
       ),
       body: Center(
-        child: Column(
+        child: Flex(
+          direction: _isPortrait ? Axis.vertical : Axis.horizontal,
           children: <Widget>[
             GlobalClock(),
+            Spacer(),
             Center(child: PlayerClock()),
+            Spacer(),
+            Flex(
+              direction: _isPortrait ? Axis.horizontal : Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Container(
+                  child: NbPlayers(),
+                ),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: RemovePlayerButton(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: AddPlayerButton(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
       ),
-      floatingActionButton:
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Container(
-                child: NbPlayers(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: RemovePlayerButton(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: AddPlayerButton(),
-              ),
-            ],
-          ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
