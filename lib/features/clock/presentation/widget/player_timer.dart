@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:game_clock/core/strings/widgets_keys.dart';
-import 'package:game_clock/core/util/utils.dart';
-import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
-import 'package:game_clock/features/clock/domain/entities/player.dart';
-import 'package:game_clock/features/clock/domain/repositories/active_player_repository.dart';
-import 'package:game_clock/injection_container.dart';
+import 'package:flutter_game_clock/core/strings/widgets_keys.dart';
+import 'package:flutter_game_clock/core/util/utils.dart';
+import 'package:flutter_game_clock/features/clock/data/datasources/stopwatch_provider.dart';
+import 'package:flutter_game_clock/features/clock/domain/entities/player.dart';
+import 'package:flutter_game_clock/features/clock/domain/repositories/active_player_repository.dart';
+import 'package:flutter_game_clock/injection_container.dart';
 
 class PlayerTimer extends StatefulWidget {
   @override

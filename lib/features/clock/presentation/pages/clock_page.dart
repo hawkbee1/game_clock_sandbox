@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:game_clock/features/clock/domain/usecases/add_player.dart';
-import 'package:game_clock/features/clock/domain/usecases/remove_player.dart';
-import 'package:game_clock/features/clock/presentation/widget/global_clock.dart';
-import 'package:game_clock/features/clock/presentation/widget/nb_players.dart';
-import 'package:game_clock/features/clock/presentation/widget/player_clock.dart';
+import 'package:flutter_game_clock/features/clock/domain/usecases/add_player.dart';
+import 'package:flutter_game_clock/features/clock/domain/usecases/remove_player.dart';
+import 'package:flutter_game_clock/features/clock/presentation/widget/global_clock.dart';
+import 'package:flutter_game_clock/features/clock/presentation/widget/nb_players.dart';
+import 'package:flutter_game_clock/features/clock/presentation/widget/player_clock.dart';
 
 class ClockPage extends StatelessWidget {
   final String title;

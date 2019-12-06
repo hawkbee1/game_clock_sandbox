@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:game_clock/features/clock/domain/entities/player.dart';
-import 'package:game_clock/features/clock/domain/repositories/player_list.dart';
-import 'package:game_clock/injection_container.dart';
+import 'package:flutter_game_clock/features/clock/domain/entities/player.dart';
+import 'package:flutter_game_clock/features/clock/domain/repositories/player_list.dart';
+import 'package:flutter_game_clock/injection_container.dart';
 
 class ActivePlayer {
   ActivePlayer({this.playerList})

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:game_clock/features/clock/domain/entities/player.dart';
+import 'package:flutter_game_clock/features/clock/domain/entities/player.dart';
 
 class PlayerList {
   List<Player> _list = [];

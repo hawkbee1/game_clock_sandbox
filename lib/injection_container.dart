@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
-import 'package:game_clock/features/clock/domain/repositories/active_player_repository.dart';
-import 'package:game_clock/features/clock/domain/repositories/player_list.dart';
+import 'package:flutter_game_clock/features/clock/data/datasources/stopwatch_provider.dart';
+import 'package:flutter_game_clock/features/clock/domain/repositories/active_player_repository.dart';
+import 'package:flutter_game_clock/features/clock/domain/repositories/player_list.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt sl = GetIt.instance;

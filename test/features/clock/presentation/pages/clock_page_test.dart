@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game_clock/core/strings/widgets_keys.dart';
-import 'package:game_clock/features/clock/presentation/pages/clock_page.dart';
+import 'package:flutter_game_clock/core/strings/widgets_keys.dart';
+import 'package:flutter_game_clock/features/clock/presentation/pages/clock_page.dart';
 
 void main() {
 

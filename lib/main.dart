@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_clock/features/clock/presentation/pages/clock_page.dart';
-import 'package:game_clock/injection_container.dart' as di;
+import 'package:flutter_game_clock/features/clock/presentation/pages/clock_page.dart';
+import 'package:flutter_game_clock/injection_container.dart' as di;
 import 'plugins/desktop/desktop.dart';
 
 void main() async {

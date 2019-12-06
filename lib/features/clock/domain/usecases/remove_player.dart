@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:game_clock/features/clock/domain/repositories/active_player_repository.dart';
-import 'package:game_clock/features/clock/domain/repositories/player_list.dart';
-import 'package:game_clock/injection_container.dart';
+import 'package:flutter_game_clock/features/clock/domain/repositories/active_player_repository.dart';
+import 'package:flutter_game_clock/features/clock/domain/repositories/player_list.dart';
+import 'package:flutter_game_clock/injection_container.dart';
 
 class RemovePlayerButton extends StatelessWidget {
   @override

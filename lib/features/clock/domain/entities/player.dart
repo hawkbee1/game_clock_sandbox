@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
+import 'package:flutter_game_clock/features/clock/data/datasources/stopwatch_provider.dart';
 
 class Player extends Equatable {
   Player({@required this.playerId, @required this.color});

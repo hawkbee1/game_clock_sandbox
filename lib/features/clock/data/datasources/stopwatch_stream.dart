@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:game_clock/features/clock/data/datasources/persistence.dart';
+import 'package:flutter_game_clock/features/clock/data/datasources/persistence.dart';
 
 class MyStopwatchTimer {
   MyStopwatchTimer({

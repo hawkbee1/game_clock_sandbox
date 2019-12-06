@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_clock/features/clock/presentation/widget/player_timer.dart';
+import 'package:flutter_game_clock/features/clock/presentation/widget/player_timer.dart';
 
 class PlayerClock extends StatelessWidget {
   const PlayerClock({

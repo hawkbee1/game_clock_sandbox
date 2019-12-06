@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:game_clock/features/clock/data/datasources/stopwatch_provider.dart';
-import 'package:game_clock/features/clock/domain/repositories/active_player_repository.dart';
-import 'package:game_clock/injection_container.dart';
+import 'package:flutter_game_clock/features/clock/data/datasources/stopwatch_provider.dart';
+import 'package:flutter_game_clock/features/clock/domain/repositories/active_player_repository.dart';
+import 'package:flutter_game_clock/injection_container.dart';
 
 class StopClockButton extends StatelessWidget {
   @override

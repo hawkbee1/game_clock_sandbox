@@ -1,4 +1,4 @@
-import 'package:game_clock/features/clock/data/datasources/stopwatch_stream.dart';
+import 'package:flutter_game_clock/features/clock/data/datasources/stopwatch_stream.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Use to maintain state between hot restarts
