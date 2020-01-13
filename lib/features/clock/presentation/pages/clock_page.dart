@@ -4,7 +4,6 @@ import 'package:flutter_game_clock/features/clock/domain/usecases/add_player.dar
 import 'package:flutter_game_clock/features/clock/domain/usecases/remove_player.dart';
 import 'package:flutter_game_clock/features/clock/presentation/widget/global_clock.dart';
 import 'package:flutter_game_clock/features/clock/presentation/widget/nb_players.dart';
-import 'package:flutter_game_clock/features/clock/presentation/widget/nb_turns.dart';
 import 'package:flutter_game_clock/features/clock/presentation/widget/player_clock.dart';
 
 class ClockPage extends StatelessWidget {
