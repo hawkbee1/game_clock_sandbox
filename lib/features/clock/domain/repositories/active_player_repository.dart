@@ -10,7 +10,7 @@ class ActivePlayer {
       : assert(playerList != null),
         _playerList = playerList,
         _activePlayer = playerList.players.elementAt(0) {
-    _controller.add(_activePlayer);
+    _controllerActivePlayer.add(_activePlayer);
   }
 
   final PlayerList playerList;
@@ -18,23 +18,26 @@ class ActivePlayer {
 
   Player _activePlayer;
   int index = 0;
-  final _controller = StreamController<Player>();
+  int _nbTurns = 0;
+
+  final _controllerActivePlayer = StreamController<Player>();
+  final _controllerNbTurns = StreamController<int>();
 
   void nextPlayer() {
     _playerList = sl();
     debugPrint('nextPlayer tapped ${_playerList.players.length}');
     pause();
+    // when we cycled through all players we start again at first player and add a turn
     if (index == _playerList.players.length - 1) {
-      debugPrint('first');
-
       _activePlayer = _playerList.players.elementAt(0);
+      _nbTurns++;
+      _controllerNbTurns.add(_nbTurns);
       index = 0;
     } else {
-      debugPrint('second');
       index++;
       _activePlayer = _playerList.players.elementAt(index);
     }
-    _controller.add(_activePlayer);
+    _controllerActivePlayer.add(_activePlayer);
   }
 
   void start() {
@@ -45,9 +48,16 @@ class ActivePlayer {
     _activePlayer.stopwatch.pause();
   }
 
+  void gameReset() {
+    _nbTurns = 0;
+    _controllerNbTurns.add(_nbTurns);
+  }
+
   Stream<Duration> get timeStream => _activePlayer.stopwatch.stream;
 
-  Stream<Player> get playerStream => _controller.stream;
-  
+  Stream<Player> get playerStream => _controllerActivePlayer.stream;
+
+  Stream<int> get nbTurnsStream => _controllerNbTurns.stream;
+
   Player get activePlayer => _activePlayer;
 }

@@ -26,6 +26,6 @@ class MyClockPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Where Assistant',
-      home: ClockPage(title: 'toto',),);
+      home: ClockPage(),);
   }
 }

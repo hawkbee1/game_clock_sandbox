@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_game_clock/core/strings/widgets_keys.dart';
+import 'package:flutter_game_clock/core/themes/styles.dart';
 import 'package:flutter_game_clock/core/util/utils.dart';
 import 'package:flutter_game_clock/features/clock/data/datasources/stopwatch_provider.dart';
 import 'package:flutter_game_clock/features/clock/domain/entities/player.dart';
@@ -114,11 +115,7 @@ class PlayerStopWatch extends StatelessWidget {
           if (!snapshot.hasData) return CircularProgressIndicator();
           return Text(
             prettyPrintDuration(snapshot.data),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 60,
-              color: Colors.black,
-            ),
+            style: bigTextStyle,
           );
         });
   }
