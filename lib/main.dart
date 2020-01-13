@@ -17,16 +17,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: _kShrineTheme,
+      theme: _defaultGameClockTheme,
       home: ClockPage(),
     );
   }
 }
 
 
-final ThemeData _kShrineTheme = _buildShrineTheme();
+final ThemeData _defaultGameClockTheme = _buildDefaultTheme();
 
-ThemeData _buildShrineTheme() {
+ThemeData _buildDefaultTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
     buttonTheme: base.buttonTheme.copyWith(
