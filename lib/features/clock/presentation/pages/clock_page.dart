@@ -28,20 +28,26 @@ class ClockPage extends StatelessWidget {
               direction: _isPortrait ? Axis.horizontal : Axis.vertical,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Container(
-                  child: NbPlayers(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Container(
+                    child: NbPlayers(),
+                  ),
                 ),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: RemovePlayerButton(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: AddPlayerButton(),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: RemovePlayerButton(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: AddPlayerButton(),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
