@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_clock/features/clock/domain/repositories/player_list.dart';
 import 'package:flutter_game_clock/injection_container.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NbPlayers extends StatelessWidget {
   @override
@@ -15,7 +16,11 @@ class NbPlayers extends StatelessWidget {
         );
         return Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text('Number of players: ${snapshot.data}'),
+          child: Text(
+            'Number of players: ${snapshot.data}',
+            style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+            fontSize: 16.0),
+          ),
         );
       },
 

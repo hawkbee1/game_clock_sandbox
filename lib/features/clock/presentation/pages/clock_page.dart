@@ -16,36 +16,43 @@ class ClockPage extends StatelessWidget {
             ? true
             : false;
     return Scaffold(
-      body: Center(
-        child: Flex(
-          direction: _isPortrait ? Axis.vertical : Axis.horizontal,
-          children: <Widget>[
-            Spacer(),
-            GlobalClock(),
-            Center(child: PlayerClock()),
-            Spacer(),
-            Flex(
-              direction: _isPortrait ? Axis.horizontal : Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  child: NbPlayers(),
-                ),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: RemovePlayerButton(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: AddPlayerButton(),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+          image: AssetImage('assets/images/background.png'),
+          fit: BoxFit.cover,
+        )),
+        child: Center(
+          child: Flex(
+            direction: _isPortrait ? Axis.vertical : Axis.horizontal,
+            children: <Widget>[
+              Spacer(),
+              GlobalClock(),
+              Center(child: PlayerClock()),
+              Spacer(),
+              Flex(
+                direction: _isPortrait ? Axis.horizontal : Axis.vertical,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    child: NbPlayers(),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: RemovePlayerButton(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: AddPlayerButton(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

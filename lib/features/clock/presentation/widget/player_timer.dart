@@ -9,6 +9,7 @@ import 'package:flutter_game_clock/features/clock/data/datasources/stopwatch_pro
 import 'package:flutter_game_clock/features/clock/domain/entities/player.dart';
 import 'package:flutter_game_clock/features/clock/domain/repositories/active_player_repository.dart';
 import 'package:flutter_game_clock/injection_container.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PlayerTimer extends StatefulWidget {
   @override
@@ -111,7 +112,7 @@ class PlayerClockPanel extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         'Player: ${snapshot.data.toString()}',
-                        style: TextStyle(
+                        style: GoogleFonts.lato(
                           fontSize: 40,
                           color: Colors.black,
                         ),
@@ -137,7 +138,7 @@ class PlayerStopWatch extends StatelessWidget {
           if (!snapshot.hasData) return CircularProgressIndicator();
           return Text(
             prettyPrintDuration(snapshot.data),
-            style: bigTextStyle,
+            style: GoogleFonts.lato(textStyle: bigTextStyle),
           );
         });
   }

@@ -3,6 +3,7 @@ import 'package:flutter_game_clock/core/strings/widgets_keys.dart';
 import 'package:flutter_game_clock/core/util/utils.dart';
 import 'package:flutter_game_clock/features/clock/data/datasources/stopwatch_provider.dart';
 import 'package:flutter_game_clock/injection_container.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GlobalTimer extends StatelessWidget {
   @override
@@ -19,7 +20,7 @@ class GlobalTimer extends StatelessWidget {
             if(!snapshot.hasData) return CircularProgressIndicator();
             return Text(
               prettyPrintDuration(snapshot.data),
-              style: TextStyle(
+              style: GoogleFonts.lato(
                 fontWeight: FontWeight.bold,
                 fontSize: 60,
                 color: Colors.black,
