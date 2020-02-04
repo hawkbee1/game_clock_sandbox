@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_game_clock/core/strings/widgets_keys.dart';
@@ -54,8 +55,18 @@ class _PlayerTimerState extends State<PlayerTimer>
             transform: Matrix4.rotationX((1 - _controller.value) * pi / 2),
             alignment: Alignment.center,
             child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black54,
+                      offset: Offset(9, 9),
+                      blurRadius: 10,
+                      spreadRadius: 5.0,
+                    )
+                  ],
+                ),
               margin: EdgeInsets.symmetric(horizontal: 20),
-              padding: EdgeInsets.symmetric(vertical: 12),
+//              padding: EdgeInsets.symmetric(vertical: 12),
               alignment: Alignment.center,
               child: PlayerClockPanel(),
             ),
@@ -82,7 +93,18 @@ class PlayerClockPanel extends StatelessWidget {
               return Container(
                 height: 200.0,
                 key: Key(GLOBAL_TIMER),
-                color: snapshot.data.color,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors:[
+                        snapshot.data.color,
+                        snapshot.data.color,
+                        snapshot.data.color,
+                        Colors.blue,
+                      ])
+                ),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
