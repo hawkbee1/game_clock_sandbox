@@ -1,8 +1,8 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_game_clock/features/clock/presentation/pages/clock_page.dart';
 import 'package:flutter_game_clock/injection_container.dart' as di;
 import 'plugins/desktop/desktop.dart';
-
 
 void main() async {
   setTargetPlatformForDesktop();
@@ -14,6 +14,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+//    forcing screen orientation to portrait
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -22,7 +27,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 
 final ThemeData _defaultGameClockTheme = _buildDefaultTheme();
 
