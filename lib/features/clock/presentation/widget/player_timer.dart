@@ -29,7 +29,7 @@ class _PlayerTimerState extends State<PlayerTimer>
     _activePlayer = sl();
     _stopwatchProvider = sl();
     _controller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 125), value: 1);
+        vsync: this, duration: Duration(milliseconds: 500), value: 1);
   }
 
   @override
