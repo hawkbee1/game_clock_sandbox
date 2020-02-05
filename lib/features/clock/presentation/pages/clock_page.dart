@@ -37,7 +37,10 @@ class ClockPage extends StatelessWidget {
                   Container(
                     child: NbPlayers(),
                   ),
-                  Row(
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(16.0),
