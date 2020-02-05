@@ -19,7 +19,7 @@ class NbPlayers extends StatelessWidget {
           child: Text(
             'Number of players: ${snapshot.data}',
             style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-            fontSize: 16.0),
+            fontSize: 14.0),
           ),
         );
       },
