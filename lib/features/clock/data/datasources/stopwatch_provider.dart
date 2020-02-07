@@ -26,4 +26,5 @@ class StopwatchProvider {
   void reset() => _stopwatch.reset();
   void start() => _stopwatch.start();
   void pause() => _stopwatch.pause();
+  dispose() => _stopwatch.dispose();
 }

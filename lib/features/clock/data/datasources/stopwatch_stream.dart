@@ -50,6 +50,10 @@ class MyStopwatchTimer {
     _init();
   }
 
+  void dispose() {
+    _timer.cancel();
+    _controller.close();
+  }
 }
 
 class PersistedMyStopwatch {
@@ -71,6 +75,7 @@ class PersistedMyStopwatch {
   MyStopwatchTimer _stopwatch;
 
   Stream<Duration> get stream => _controller.stream;
+
   Duration get elapsed => _stopwatch.elapsed;
 
   bool get state => _stopwatch.state;
@@ -81,5 +86,5 @@ class PersistedMyStopwatch {
 
   void start() => _stopwatch.start();
 
-  dispose() => _controller?.close();
+  dispose() => _stopwatch.dispose();
 }

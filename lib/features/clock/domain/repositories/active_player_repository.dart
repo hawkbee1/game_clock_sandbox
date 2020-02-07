@@ -53,6 +53,10 @@ class ActivePlayer {
     _controllerNbTurns.add(_nbTurns);
   }
 
+  void dispose() {
+    _activePlayer.stopwatch.dispose();
+  }
+
   Stream<Duration> get timeStream => _activePlayer.stopwatch.stream;
 
   Stream<Player> get playerStream => _controllerActivePlayer.stream;
