@@ -21,11 +21,11 @@ class ClockPage extends StatelessWidget {
             direction: Axis.vertical,
             children: <Widget>[
               Spacer(),
-              GlobalClock(),
-              Spacer(),
               PlayersList(),
               Spacer(),
               Center(child: PlayerClock()),
+              Spacer(),
+              GlobalClock(),
               Spacer(),
             ],
           ),
