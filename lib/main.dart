@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -30,11 +31,23 @@ class GameClockPage extends StatefulWidget {
 
 class _GameClockPageState extends State<GameClockPage> {
   final List<Stopwatch> _playerStopwatches = [];
+  final List<Color> _playerColors = [];
   final Stopwatch _gameStopwatch = Stopwatch();
+  final Random _random = Random();
   Timer? _timer;
   int _currentPlayerIndex = 0;
   int _numberOfPlayers = 5;
   bool _isGameRunning = false;
+
+  Color _generateRandomColor() {
+    // Generate pastel colors for better readability
+    return Color.fromRGBO(
+      _random.nextInt(128) + 128, // Red component between 128-255
+      _random.nextInt(128) + 128, // Green component between 128-255
+      _random.nextInt(128) + 128, // Blue component between 128-255
+      1, // Full opacity
+    );
+  }
 
   @override
   void initState() {
@@ -45,8 +58,10 @@ class _GameClockPageState extends State<GameClockPage> {
 
   void _initializeStopwatches() {
     _playerStopwatches.clear();
+    _playerColors.clear();
     for (int i = 0; i < _numberOfPlayers; i++) {
       _playerStopwatches.add(Stopwatch());
+      _playerColors.add(_generateRandomColor());
     }
   }
 
@@ -109,6 +124,7 @@ class _GameClockPageState extends State<GameClockPage> {
       setState(() {
         _numberOfPlayers++;
         _playerStopwatches.add(Stopwatch());
+        _playerColors.add(_generateRandomColor());
       });
     }
   }
@@ -118,6 +134,7 @@ class _GameClockPageState extends State<GameClockPage> {
       setState(() {
         _numberOfPlayers--;
         _playerStopwatches.removeLast();
+        _playerColors.removeLast();
         if (_currentPlayerIndex >= _numberOfPlayers) {
           _currentPlayerIndex = _numberOfPlayers - 1;
         }
@@ -190,7 +207,7 @@ class _GameClockPageState extends State<GameClockPage> {
                       margin: const EdgeInsets.all(16),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.lightBlue.shade100,
+                        color: _playerColors[_currentPlayerIndex],
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Column(
@@ -198,7 +215,10 @@ class _GameClockPageState extends State<GameClockPage> {
                         children: [
                           Text(
                             'Player: ${_currentPlayerIndex + 1}',
-                            style: const TextStyle(fontSize: 36),
+                            style: const TextStyle(
+                              fontSize: 36,
+                              color: Colors.black87,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -208,6 +228,7 @@ class _GameClockPageState extends State<GameClockPage> {
                             style: const TextStyle(
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
                         ],
