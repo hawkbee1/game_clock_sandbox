@@ -34,10 +34,10 @@ class _GameClockPageState extends State<GameClockPage> {
   final List<Color> _playerColors = [];
   final Stopwatch _gameStopwatch = Stopwatch();
   final Random _random = Random();
-  Timer? _timer;
   int _currentPlayerIndex = 0;
   int _numberOfPlayers = 5;
   bool _isGameRunning = false;
+  bool _showSummary = false;
 
   Color _generateRandomColor() {
     // Generate pastel colors for better readability
@@ -66,7 +66,7 @@ class _GameClockPageState extends State<GameClockPage> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (mounted) setState(() {});
     });
   }
@@ -142,14 +142,33 @@ class _GameClockPageState extends State<GameClockPage> {
     }
   }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  void _finishGame() {
+    setState(() {
+      _isGameRunning = false;
+      _gameStopwatch.stop();
+      _playerStopwatches[_currentPlayerIndex].stop();
+      _showSummary = true;
+    });
+  }
+
+  void _startNewGame() {
+    setState(() {
+      _showSummary = false;
+      _resetGame();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_showSummary) {
+      return GameSummaryScreen(
+        gameDuration: _gameStopwatch.elapsed,
+        playerDurations: _playerStopwatches.map((s) => s.elapsed).toList(),
+        playerColors: _playerColors,
+        onNewGame: _startNewGame,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -189,7 +208,7 @@ class _GameClockPageState extends State<GameClockPage> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.stop),
-                            onPressed: _resetGame,
+                            onPressed: _finishGame,
                             color: Colors.red,
                             iconSize: 48,
                           ),
@@ -267,6 +286,158 @@ class _GameClockPageState extends State<GameClockPage> {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class GameSummaryScreen extends StatelessWidget {
+  final Duration gameDuration;
+  final List<Duration> playerDurations;
+  final List<Color> playerColors;
+  final VoidCallback onNewGame;
+
+  const GameSummaryScreen({
+    super.key,
+    required this.gameDuration,
+    required this.playerDurations,
+    required this.playerColors,
+    required this.onNewGame,
+  });
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    String centiseconds = twoDigits(duration.inMilliseconds.remainder(1000) ~/ 10);
+    return "$minutes:$seconds:$centiseconds";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: const Text('Game Summary', style: TextStyle(color: Colors.white)),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Total Game Time',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _formatDuration(gameDuration),
+                            style: const TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Player Times',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Card(
+                    child: DataTable(
+                      columns: const [
+                        DataColumn(
+                          label: Text('Player',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        DataColumn(
+                          label: Text('Time',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        DataColumn(
+                          label: Text('% of Game',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                      rows: List.generate(
+                        playerDurations.length,
+                        (index) {
+                          final duration = playerDurations[index];
+                          final percentage = (duration.inMilliseconds /
+                                  gameDuration.inMilliseconds *
+                                  100)
+                              .toStringAsFixed(1);
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: playerColors[index],
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text('Player ${index + 1}'),
+                                  ],
+                                ),
+                              ),
+                              DataCell(Text(_formatDuration(duration))),
+                              DataCell(Text('$percentage%')),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton(
+              onPressed: onNewGame,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.replay),
+                  SizedBox(width: 8),
+                  Text('Start New Game', style: TextStyle(fontSize: 18)),
+                ],
+              ),
             ),
           ),
         ],
