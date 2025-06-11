@@ -136,7 +136,9 @@ class _GamePageState extends ConsumerState<GamePage> {
           MaterialPageRoute(
             builder: (context) => GameSummaryPage(
               gameDuration: _gameStopwatch.elapsed,
-              playerDurations: _playerStopwatches.map((s) => s.elapsed).toList(),
+              playerDurations: _playerStopwatches
+                  .map((s) => s.elapsed)
+                  .toList(),
               playerColors: _playerColors,
             ),
           ),
@@ -151,7 +153,9 @@ class _GamePageState extends ConsumerState<GamePage> {
           MaterialPageRoute(
             builder: (context) => GameSummaryPage(
               gameDuration: _gameStopwatch.elapsed,
-              playerDurations: _playerStopwatches.map((s) => s.elapsed).toList(),
+              playerDurations: _playerStopwatches
+                  .map((s) => s.elapsed)
+                  .toList(),
               playerColors: _playerColors,
             ),
           ),

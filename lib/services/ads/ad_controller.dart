@@ -26,7 +26,8 @@ class AdState {
     return AdState(
       bannerAd: bannerAd ?? this.bannerAd,
       isBannerAdReady: isBannerAdReady ?? this.isBannerAdReady,
-      isInterstitialAdReady: isInterstitialAdReady ?? this.isInterstitialAdReady,
+      isInterstitialAdReady:
+          isInterstitialAdReady ?? this.isInterstitialAdReady,
     );
   }
 }
@@ -47,26 +48,30 @@ class AdController extends AsyncNotifier<AdState> {
   Future<void> loadBannerAd() async {
     _bannerAd?.dispose();
     _bannerAd = await _adService.loadBannerAd();
-    
+
     if (state.hasValue) {
-      state = AsyncData(AdState(
-        bannerAd: _bannerAd,
-        isBannerAdReady: _bannerAd != null,
-        isInterstitialAdReady: state.value!.isInterstitialAdReady,
-      ));
+      state = AsyncData(
+        AdState(
+          bannerAd: _bannerAd,
+          isBannerAdReady: _bannerAd != null,
+          isInterstitialAdReady: state.value!.isInterstitialAdReady,
+        ),
+      );
     }
   }
 
   Future<void> loadInterstitialAd() async {
     _interstitialAd?.dispose();
     _interstitialAd = await _adService.loadInterstitialAd();
-    
+
     if (state.hasValue && _interstitialAd != null) {
-      state = AsyncData(AdState(
-        bannerAd: state.value!.bannerAd,
-        isBannerAdReady: state.value!.isBannerAdReady,
-        isInterstitialAdReady: true,
-      ));
+      state = AsyncData(
+        AdState(
+          bannerAd: state.value!.bannerAd,
+          isBannerAdReady: state.value!.isBannerAdReady,
+          isInterstitialAdReady: true,
+        ),
+      );
     }
   }
 
@@ -83,11 +88,13 @@ class AdController extends AsyncNotifier<AdState> {
       onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
         if (state.hasValue) {
-          state = AsyncData(AdState(
-            bannerAd: state.value!.bannerAd,
-            isBannerAdReady: state.value!.isBannerAdReady,
-            isInterstitialAdReady: false,
-          ));
+          state = AsyncData(
+            AdState(
+              bannerAd: state.value!.bannerAd,
+              isBannerAdReady: state.value!.isBannerAdReady,
+              isInterstitialAdReady: false,
+            ),
+          );
         }
         loadInterstitialAd();
         onAdDismissed?.call();
@@ -95,11 +102,13 @@ class AdController extends AsyncNotifier<AdState> {
       onAdFailedToShowFullScreenContent: (ad, error) {
         ad.dispose();
         if (state.hasValue) {
-          state = AsyncData(AdState(
-            bannerAd: state.value!.bannerAd,
-            isBannerAdReady: state.value!.isBannerAdReady,
-            isInterstitialAdReady: false,
-          ));
+          state = AsyncData(
+            AdState(
+              bannerAd: state.value!.bannerAd,
+              isBannerAdReady: state.value!.isBannerAdReady,
+              isInterstitialAdReady: false,
+            ),
+          );
         }
         loadInterstitialAd();
         onAdFailed?.call();

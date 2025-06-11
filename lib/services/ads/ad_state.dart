@@ -24,7 +24,8 @@ class AdState {
     return AdState(
       bannerAd: bannerAd ?? this.bannerAd,
       isBannerAdReady: isBannerAdReady ?? this.isBannerAdReady,
-      isInterstitialAdReady: isInterstitialAdReady ?? this.isInterstitialAdReady,
+      isInterstitialAdReady:
+          isInterstitialAdReady ?? this.isInterstitialAdReady,
     );
   }
 }
@@ -66,10 +67,7 @@ class AdNotifier extends _$AdNotifier {
           },
           onAdFailedToLoad: (ad, error) {
             ad.dispose();
-            state = state.copyWith(
-              bannerAd: null,
-              isBannerAdReady: false,
-            );
+            state = state.copyWith(bannerAd: null, isBannerAdReady: false);
           },
         ),
       );
@@ -77,10 +75,7 @@ class AdNotifier extends _$AdNotifier {
       await newBannerAd.load();
     } catch (e) {
       newBannerAd?.dispose();
-      state = state.copyWith(
-        bannerAd: null,
-        isBannerAdReady: false,
-      );
+      state = state.copyWith(bannerAd: null, isBannerAdReady: false);
     }
   }
 

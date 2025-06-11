@@ -30,7 +30,7 @@ class AdMobService implements AdService {
   Future<InterstitialAd?> loadInterstitialAd() async {
     try {
       final completer = Completer<InterstitialAd?>();
-      
+
       await InterstitialAd.load(
         adUnitId: AdHelper.interstitialAdUnitId,
         request: const AdRequest(),
