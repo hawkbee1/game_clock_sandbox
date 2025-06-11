@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../services/ads/ad_state.dart';
+import 'summary_page.dart';
 import 'dart:async';
 import 'dart:math';
-import 'summary_page.dart';
 
-class GamePage extends StatefulWidget {
+class GamePage extends ConsumerStatefulWidget {
   const GamePage({super.key});
 
   @override
-  State<GamePage> createState() => _GamePageState();
+  ConsumerState<GamePage> createState() => _GamePageState();
 }
 
-class _GamePageState extends State<GamePage> {
+class _GamePageState extends ConsumerState<GamePage> {
   final List<Stopwatch> _playerStopwatches = [];
   final List<Color> _playerColors = [];
   final Stopwatch _gameStopwatch = Stopwatch();
@@ -122,18 +125,39 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _finishGame() async {
-    _pauseGame();
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => GameSummaryPage(
-          gameDuration: _gameStopwatch.elapsed,
-          playerDurations: _playerStopwatches.map((s) => s.elapsed).toList(),
-          playerColors: _playerColors,
-        ),
-      ),
+    final adNotifier = ref.read(adNotifierProvider.notifier);
+    await adNotifier.showInterstitialAd(
+      onAdDismissed: () {
+        // Stop the game timers and navigate to summary
+        _gameStopwatch.stop();
+        _playerStopwatches[_currentPlayerIndex].stop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GameSummaryPage(
+              gameDuration: _gameStopwatch.elapsed,
+              playerDurations: _playerStopwatches.map((s) => s.elapsed).toList(),
+              playerColors: _playerColors,
+            ),
+          ),
+        ).then((_) => _resetGame());
+      },
+      onAdFailed: () {
+        // If ad fails, just proceed with navigation
+        _gameStopwatch.stop();
+        _playerStopwatches[_currentPlayerIndex].stop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GameSummaryPage(
+              gameDuration: _gameStopwatch.elapsed,
+              playerDurations: _playerStopwatches.map((s) => s.elapsed).toList(),
+              playerColors: _playerColors,
+            ),
+          ),
+        ).then((_) => _resetGame());
+      },
     );
-    _resetGame();
   }
 
   @override
@@ -148,6 +172,19 @@ class _GamePageState extends State<GamePage> {
       ),
       body: Column(
         children: [
+          Consumer(
+            builder: (context, ref, _) {
+              final adState = ref.watch(adNotifierProvider);
+              if (adState.isBannerAdReady && adState.bannerAd != null) {
+                return SizedBox(
+                  width: adState.bannerAd!.size.width.toDouble(),
+                  height: adState.bannerAd!.size.height.toDouble(),
+                  child: AdWidget(ad: adState.bannerAd!),
+                );
+              }
+              return const SizedBox();
+            },
+          ),
           Expanded(
             child: Row(
               children: [
