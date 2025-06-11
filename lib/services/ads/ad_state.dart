@@ -46,30 +46,37 @@ class AdNotifier extends _$AdNotifier {
   }
 
   Future<void> loadBannerAd() async {
-    final bannerAd = BannerAd(
-      adUnitId: _getBannerAdUnitId(),
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
-          state = state.copyWith(
-            bannerAd: bannerAd,
-            isBannerAdReady: true,
-          );
-        },
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-          state = state.copyWith(
-            bannerAd: null,
-            isBannerAdReady: false,
-          );
-        },
-      ),
-    );
+    BannerAd? previousAd = state.bannerAd;
+    previousAd?.dispose();
 
+    BannerAd? newBannerAd;
     try {
-      await bannerAd.load();
+      newBannerAd = BannerAd(
+        adUnitId: _getBannerAdUnitId(),
+        size: AdSize.banner,
+        request: const AdRequest(),
+        listener: BannerAdListener(
+          onAdLoaded: (_) {
+            if (newBannerAd != null) {
+              state = state.copyWith(
+                bannerAd: newBannerAd,
+                isBannerAdReady: true,
+              );
+            }
+          },
+          onAdFailedToLoad: (ad, error) {
+            ad.dispose();
+            state = state.copyWith(
+              bannerAd: null,
+              isBannerAdReady: false,
+            );
+          },
+        ),
+      );
+
+      await newBannerAd.load();
     } catch (e) {
+      newBannerAd?.dispose();
       state = state.copyWith(
         bannerAd: null,
         isBannerAdReady: false,
@@ -141,10 +148,8 @@ class AdNotifier extends _$AdNotifier {
     throw UnsupportedError('Unsupported platform');
   }
 
-  @override
-  void dispose() {
+  void cleanup() {
     state.bannerAd?.dispose();
     _interstitialAd?.dispose();
-    super.dispose();
   }
 }
