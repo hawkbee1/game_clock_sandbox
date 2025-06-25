@@ -165,8 +165,8 @@ class _GamePageState extends State<GamePage> {
   }
 
   Widget gameController() {
-    return Expanded(
-      flex: 2,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -201,28 +201,30 @@ class _GamePageState extends State<GamePage> {
       flex: 3,
       child: GestureDetector(
         onTap: _nextPlayer,
-        child: Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: _playerColors[_currentPlayerIndex],
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Player: ${_currentPlayerIndex + 1}',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                _formatDuration(
-                  _playerStopwatches[_currentPlayerIndex].elapsed,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: _playerColors[_currentPlayerIndex],
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Player: ${_currentPlayerIndex + 1}',
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  _formatDuration(
+                    _playerStopwatches[_currentPlayerIndex].elapsed,
+                  ),
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -230,8 +232,8 @@ class _GamePageState extends State<GamePage> {
   }
 
   Widget team() {
-    return Expanded(
-      flex: 1,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
