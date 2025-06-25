@@ -174,7 +174,7 @@ class _GamePageState extends State<GamePage> {
             width: 195,
             child: Text(
               _formatDuration(_gameStopwatch.elapsed),
-              style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.displayLarge,
             ),
           ),
           Row(
@@ -216,7 +216,7 @@ class _GamePageState extends State<GamePage> {
             children: [
               Text(
                 'Player: ${_currentPlayerIndex + 1}',
-                style: const TextStyle(fontSize: 36, color: Colors.black87),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 8),
               SizedBox(
@@ -225,11 +225,7 @@ class _GamePageState extends State<GamePage> {
                   _formatDuration(
                     _playerStopwatches[_currentPlayerIndex].elapsed,
                   ),
-                  style: const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
+                  style: Theme.of(context).textTheme.displayLarge,
                 ),
               ),
             ],
@@ -247,6 +243,7 @@ class _GamePageState extends State<GamePage> {
         children: [
           Text(
             'Number of players: $_numberOfPlayers',
+            style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
           Row(

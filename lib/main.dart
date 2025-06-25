@@ -15,6 +15,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
+        textTheme: TextTheme(
+          displayLarge: const TextStyle(
+            fontFeatures: [FontFeature.tabularFigures()],
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+          ),
+          bodyLarge: const TextStyle(
+            fontFeatures: [FontFeature.tabularFigures()],
+            fontSize: 36,
+            color: Colors.black87,
+          ),
+          bodyMedium: const TextStyle(
+            fontFeatures: [FontFeature.tabularFigures()],
+          ),
+        ),
       ),
       home: const GamePage(),
     );
