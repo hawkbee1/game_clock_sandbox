@@ -46,7 +46,7 @@ class GameSummaryPage extends StatelessWidget {
                 children: [
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(8),
                       child: Column(
                         children: [
                           const Text(
@@ -76,8 +76,11 @@ class GameSummaryPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  Card(
+                  SingleChildScrollView(
                     child: DataTable(
+                      columnSpacing: 8,
+                      sortAscending: true,
+                      sortColumnIndex: 2,
                       columns: const [
                         DataColumn(
                           label: Text(
@@ -92,6 +95,7 @@ class GameSummaryPage extends StatelessWidget {
                           ),
                         ),
                         DataColumn(
+                          numeric: true,
                           label: Text(
                             '% of Game',
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -125,7 +129,9 @@ class GameSummaryPage extends StatelessWidget {
                               ),
                             ),
                             DataCell(Text(_formatDuration(duration))),
-                            DataCell(Text('$percentage%')),
+                            DataCell(
+                              Text('$percentage%', textAlign: TextAlign.right),
+                            ),
                           ],
                         );
                       }),
