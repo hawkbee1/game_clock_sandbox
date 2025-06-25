@@ -170,9 +170,12 @@ class _GamePageState extends State<GamePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            _formatDuration(_gameStopwatch.elapsed),
-            style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+          SizedBox(
+            width: 195,
+            child: Text(
+              _formatDuration(_gameStopwatch.elapsed),
+              style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -216,14 +219,17 @@ class _GamePageState extends State<GamePage> {
                 style: const TextStyle(fontSize: 36, color: Colors.black87),
               ),
               const SizedBox(height: 8),
-              Text(
-                _formatDuration(
-                  _playerStopwatches[_currentPlayerIndex].elapsed,
-                ),
-                style: const TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+              SizedBox(
+                width: 195,
+                child: Text(
+                  _formatDuration(
+                    _playerStopwatches[_currentPlayerIndex].elapsed,
+                  ),
+                  style: const TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
               ),
             ],
