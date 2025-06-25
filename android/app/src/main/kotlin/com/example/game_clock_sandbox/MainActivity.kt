@@ -1,4 +1,4 @@
-package com.example.game_clock_sandbox
+package io.whereassistant.flutter_game_clock
 
 import io.flutter.embedding.android.FlutterActivity
 
