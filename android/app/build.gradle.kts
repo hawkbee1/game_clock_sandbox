@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "io.whereassistant.flutter_game_clock"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = flutter.compileSdk
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -42,8 +42,8 @@ android {
         applicationId = "io.whereassistant.flutter_game_clock"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = flutter.minSdk
+        targetSdk = flutter.targetSdk
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
