@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../services/ads/ad_controller.dart';
 import 'summary_page.dart';
 import 'dart:async';
 import 'dart:math';
@@ -27,15 +25,10 @@ class _GamePageState extends ConsumerState<GamePage> {
     super.initState();
     _initializeStopwatches();
     _startTimer();
-    // Load the banner ad when the page initializes
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(adControllerProvider.notifier).loadBannerAd();
-    });
   }
 
   @override
   void dispose() {
-    ref.read(adControllerProvider.notifier).cleanupAds();
     super.dispose();
   }
 
@@ -135,43 +128,19 @@ class _GamePageState extends ConsumerState<GamePage> {
   }
 
   void _finishGame() async {
-    final adNotifier = ref.read(adControllerProvider.notifier);
-    await adNotifier.showInterstitialAd(
-      onAdDismissed: () {
-        // Stop the game timers and navigate to summary
-        _gameStopwatch.stop();
-        _playerStopwatches[_currentPlayerIndex].stop();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GameSummaryPage(
-              gameDuration: _gameStopwatch.elapsed,
-              playerDurations: _playerStopwatches
-                  .map((s) => s.elapsed)
-                  .toList(),
-              playerColors: _playerColors,
-            ),
-          ),
-        ).then((_) => _resetGame());
-      },
-      onAdFailed: () {
-        // If ad fails, just proceed with navigation
-        _gameStopwatch.stop();
-        _playerStopwatches[_currentPlayerIndex].stop();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GameSummaryPage(
-              gameDuration: _gameStopwatch.elapsed,
-              playerDurations: _playerStopwatches
-                  .map((s) => s.elapsed)
-                  .toList(),
-              playerColors: _playerColors,
-            ),
-          ),
-        ).then((_) => _resetGame());
-      },
-    );
+    // Stop the game timers and navigate to summary
+    _gameStopwatch.stop();
+    _playerStopwatches[_currentPlayerIndex].stop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GameSummaryPage(
+          gameDuration: _gameStopwatch.elapsed,
+          playerDurations: _playerStopwatches.map((s) => s.elapsed).toList(),
+          playerColors: _playerColors,
+        ),
+      ),
+    ).then((_) => _resetGame());
   }
 
   @override
@@ -293,44 +262,6 @@ class _GamePageState extends ConsumerState<GamePage> {
             ),
           ),
           // Bottom banner ad
-          Container(
-            color: Colors.transparent,
-            alignment: Alignment.bottomCenter,
-            child: Consumer(
-              builder: (context, ref, _) {
-                return ref
-                    .watch(adControllerProvider)
-                    .when(
-                      data: (adState) {
-                        if (adState.isBannerAdReady &&
-                            adState.bannerAd != null) {
-                          return SizedBox(
-                            width: adState.bannerAd!.size.width.toDouble(),
-                            height: 50, // Fixed banner height
-                            child: AdWidget(ad: adState.bannerAd!),
-                          );
-                        }
-                        return Text(
-                          'Got adState but nothing to show',
-                        ); // Placeholder with same height
-                      },
-                      loading: () => const SizedBox(height: 50),
-                      error: (error, stack) {
-                        // If there's an error, try to reload the ad
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          ref
-                              .read(adControllerProvider.notifier)
-                              .loadBannerAd();
-                        });
-                        return Text(
-                          'Error loading ad: ${error.toString()}',
-                          style: TextStyle(color: Colors.red),
-                        );
-                      },
-                    );
-              },
-            ),
-          ),
         ],
       ),
     );
