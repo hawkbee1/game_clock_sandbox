@@ -145,6 +145,12 @@ class _GamePageState extends ConsumerState<GamePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isMobile =
+        Theme.of(context).platform == TargetPlatform.iOS ||
+        Theme.of(context).platform == TargetPlatform.android;
+    final isPortrait = mediaQuery.orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -156,104 +162,109 @@ class _GamePageState extends ConsumerState<GamePage> {
       body: Column(
         children: [
           Expanded(
-            flex: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  _formatDuration(_gameStopwatch.elapsed),
-                  style: const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        _isGameRunning ? Icons.pause : Icons.play_arrow,
-                      ),
-                      onPressed: _isGameRunning ? _pauseGame : _startGame,
-                      color: Colors.blue,
-                      iconSize: 48,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.stop),
-                      onPressed: _finishGame,
-                      color: Colors.red,
-                      iconSize: 48,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            child: (isMobile && isPortrait)
+                ? Column(children: [gameController(), clock(), team()])
+                : Row(children: [gameController(), clock(), team()]),
           ),
-          Expanded(
-            flex: 3,
-            child: GestureDetector(
-              onTap: _nextPlayer,
-              child: Container(
-                margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: _playerColors[_currentPlayerIndex],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Player: ${_currentPlayerIndex + 1}',
-                      style: const TextStyle(
-                        fontSize: 36,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _formatDuration(
-                        _playerStopwatches[_currentPlayerIndex].elapsed,
-                      ),
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
-                ),
+        ],
+      ),
+    );
+  }
+
+  Widget gameController() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            _formatDuration(_gameStopwatch.elapsed),
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: Icon(_isGameRunning ? Icons.pause : Icons.play_arrow),
+                onPressed: _isGameRunning ? _pauseGame : _startGame,
+                color: Colors.blue,
+                iconSize: 48,
               ),
-            ),
+              IconButton(
+                icon: const Icon(Icons.stop),
+                onPressed: _finishGame,
+                color: Colors.red,
+                iconSize: 48,
+              ),
+            ],
           ),
-          Expanded(
-            flex: 1,
+        ],
+      ),
+    );
+  }
+
+  Widget clock() {
+    return Expanded(
+      flex: 3,
+      child: GestureDetector(
+        onTap: _nextPlayer,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: _playerColors[_currentPlayerIndex],
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Number of players: $_numberOfPlayers',
-                  textAlign: TextAlign.center,
+                  'Player: ${_currentPlayerIndex + 1}',
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: _removePlayer,
-                      color: Colors.blue,
-                      iconSize: 32,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: _addPlayer,
-                      color: Colors.blue,
-                      iconSize: 32,
-                    ),
-                  ],
+                const SizedBox(height: 8),
+                Text(
+                  _formatDuration(
+                    _playerStopwatches[_currentPlayerIndex].elapsed,
+                  ),
+                  style: Theme.of(context).textTheme.displayLarge,
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget team() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Number of players: $_numberOfPlayers',
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.remove),
+                onPressed: _removePlayer,
+                color: Colors.blue,
+                iconSize: 32,
+              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: _addPlayer,
+                color: Colors.blue,
+                iconSize: 32,
+              ),
+            ],
           ),
         ],
       ),
