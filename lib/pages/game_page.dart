@@ -20,6 +20,26 @@ class GamePage extends ConsumerWidget {
         Theme.of(context).platform == TargetPlatform.android;
     final isPortrait = mediaQuery.orientation == Orientation.portrait;
 
+    var children = [
+      _GameController(
+        gameElapsed: gameState.gameElapsed,
+        isRunning: gameState.isRunning,
+        onStartPause: gameState.isRunning
+            ? notifier.pauseGame
+            : notifier.startGame,
+        onFinish: () => _finishGame(context, ref),
+      ),
+      _PlayerClock(
+        player: gameState.currentPlayer,
+        isRunning: gameState.isRunning,
+        onTap: notifier.nextPlayer,
+      ),
+      _TeamControls(
+        numberOfPlayers: gameState.numberOfPlayers,
+        onAdd: notifier.addPlayer,
+        onRemove: notifier.removePlayer,
+      ),
+    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -28,56 +48,14 @@ class GamePage extends ConsumerWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: (isMobile && isPortrait)
-                ? Column(
-                    children: [
-                      _GameController(
-                        gameElapsed: gameState.gameElapsed,
-                        isRunning: gameState.isRunning,
-                        onStartPause: gameState.isRunning
-                            ? notifier.pauseGame
-                            : notifier.startGame,
-                        onFinish: () => _finishGame(context, ref),
-                      ),
-                      _PlayerClock(
-                        player: gameState.currentPlayer,
-                        isRunning: gameState.isRunning,
-                        onTap: notifier.nextPlayer,
-                      ),
-                      _TeamControls(
-                        numberOfPlayers: gameState.numberOfPlayers,
-                        onAdd: notifier.addPlayer,
-                        onRemove: notifier.removePlayer,
-                      ),
-                    ],
-                  )
-                : Row(
-                    children: [
-                      _GameController(
-                        gameElapsed: gameState.gameElapsed,
-                        isRunning: gameState.isRunning,
-                        onStartPause: gameState.isRunning
-                            ? notifier.pauseGame
-                            : notifier.startGame,
-                        onFinish: () => _finishGame(context, ref),
-                      ),
-                      _PlayerClock(
-                        player: gameState.currentPlayer,
-                        isRunning: gameState.isRunning,
-                        onTap: notifier.nextPlayer,
-                      ),
-                      _TeamControls(
-                        numberOfPlayers: gameState.numberOfPlayers,
-                        onAdd: notifier.addPlayer,
-                        onRemove: notifier.removePlayer,
-                      ),
-                    ],
-                  ),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            (isMobile && isPortrait)
+                ? Column(children: children)
+                : Row(children: children),
+          ],
+        ),
       ),
     );
   }
