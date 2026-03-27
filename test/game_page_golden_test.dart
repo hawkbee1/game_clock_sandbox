@@ -5,6 +5,7 @@ import 'package:game_clock_sandbox/pages/game_page.dart';
 import 'package:game_clock_sandbox/state/game_notifier.dart';
 import 'package:game_clock_sandbox/models/game_state.dart';
 import 'package:game_clock_sandbox/models/player.dart';
+import 'package:game_clock_sandbox/services/color_generator.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 
 /// Design Pattern: Factory Method (Custom Devices)
@@ -50,13 +51,13 @@ class DeviceConfigFactory {
   );
 
   static List<Device> get allDevices => [
-        androidPhone,
-        androidSmall,
-        androidTablet,
-        iosPhone,
-        iosSmall,
-        iosTablet,
-      ];
+    androidPhone,
+    androidSmall,
+    androidTablet,
+    iosPhone,
+    iosSmall,
+    iosTablet,
+  ];
 }
 
 void main() {
@@ -70,11 +71,26 @@ void main() {
       // Design Pattern: Builder (DeviceBuilder from golden_toolkit)
       // Used to construct a multi-device comparison snapshot.
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: DeviceConfigFactory.allDevices)
+        ..overrideDevicesForAllScenarios(
+          devices: DeviceConfigFactory.allDevices,
+        )
         ..addScenario(
           name: 'Initial State',
-          widget: const ProviderScope(
-            child: GamePage(),
+          widget: ProviderScope(
+            overrides: [
+              gameNotifierProvider.overrideWith(
+                (ref) => GameNotifier(
+                  colorGenerator: FixedColorGenerator([
+                    Colors.blue,
+                    Colors.red,
+                    Colors.green,
+                    Colors.yellow,
+                    Colors.purple,
+                  ]),
+                ),
+              ),
+            ],
+            child: const GamePage(),
           ),
         );
 
@@ -88,19 +104,33 @@ void main() {
         isRunning: true,
         gameElapsed: const Duration(minutes: 12, seconds: 34),
         players: [
-          const Player(id: '1', name: 'Player 1', color: Colors.blue, elapsed: Duration(minutes: 5)),
-          const Player(id: '2', name: 'Player 2', color: Colors.red, elapsed: Duration(minutes: 7, seconds: 34)),
+          const Player(
+            id: '1',
+            name: 'Player 1',
+            color: Colors.blue,
+            elapsed: Duration(minutes: 5),
+          ),
+          const Player(
+            id: '2',
+            name: 'Player 2',
+            color: Colors.red,
+            elapsed: Duration(minutes: 7, seconds: 34),
+          ),
         ],
         currentPlayerIndex: 1,
       );
 
       final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(devices: DeviceConfigFactory.allDevices)
+        ..overrideDevicesForAllScenarios(
+          devices: DeviceConfigFactory.allDevices,
+        )
         ..addScenario(
           name: 'Running State',
           widget: ProviderScope(
             overrides: [
-              gameNotifierProvider.overrideWith((ref) => GameNotifier()..state = runningState),
+              gameNotifierProvider.overrideWith(
+                (ref) => GameNotifier()..state = runningState,
+              ),
             ],
             child: const GamePage(),
           ),
