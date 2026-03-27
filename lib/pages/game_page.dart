@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'summary_page.dart';
 import '../state/game_notifier.dart';
 import 'widgets/game_controller.dart';
@@ -25,7 +26,9 @@ class GamePage extends ConsumerWidget {
     final controller = GameController(
       gameElapsed: gameState.gameElapsed,
       isRunning: gameState.isRunning,
-      onStartPause: gameState.isRunning ? notifier.pauseGame : notifier.startGame,
+      onStartPause: gameState.isRunning
+          ? notifier.pauseGame
+          : notifier.startGame,
       onFinish: () => _finishGame(context, ref),
     );
 
@@ -49,29 +52,40 @@ class GamePage extends ConsumerWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            (isMobile && isPortrait)
-                ? Column(
-                    children: [
-                      controller,
-                      // In Column under SingleChildScrollView, Expanded would crash.
-                      // We use it as-is, letting it take its natural height.
-                      playerClock,
-                      teamControls,
-                    ],
-                  )
-                : Row(
-                    children: [
-                      controller,
-                      // In Row, we want the clock to take available horizontal space.
-                      Expanded(flex: 3, child: playerClock),
-                      teamControls,
-                    ],
-                  ),
-          ],
-        ),
+      body: Stack(
+        children: [
+          // use flutter_svg to display SVG background, ensuring it scales properly across devices.
+          SvgPicture.asset(
+            'assets/background/background_large_cave.svg',
+            fit: BoxFit.fitHeight,
+            height: double.infinity,
+            width: double.infinity,
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                (isMobile && isPortrait)
+                    ? Column(
+                        children: [
+                          controller,
+                          // In Column under SingleChildScrollView, Expanded would crash.
+                          // We use it as-is, letting it take its natural height.
+                          playerClock,
+                          teamControls,
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          controller,
+                          // In Row, we want the clock to take available horizontal space.
+                          Expanded(flex: 3, child: playerClock),
+                          teamControls,
+                        ],
+                      ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
