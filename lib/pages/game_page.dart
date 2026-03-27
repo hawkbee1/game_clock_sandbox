@@ -43,7 +43,13 @@ class GamePage extends ConsumerWidget {
       onAdd: notifier.addPlayer,
       onRemove: notifier.removePlayer,
     );
-
+    final children = [
+      Expanded(child: controller),
+      // In Column under SingleChildScrollView, Expanded would crash.
+      // We use it as-is, letting it take its natural height.
+      Expanded(child: playerClock),
+      Expanded(child: teamControls),
+    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -61,29 +67,15 @@ class GamePage extends ConsumerWidget {
             height: double.infinity,
             width: double.infinity,
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                (isMobile && isPortrait)
-                    ? Column(
-                        children: [
-                          controller,
-                          // In Column under SingleChildScrollView, Expanded would crash.
-                          // We use it as-is, letting it take its natural height.
-                          playerClock,
-                          teamControls,
-                        ],
-                      )
-                    : Row(
-                        children: [
-                          controller,
-                          // In Row, we want the clock to take available horizontal space.
-                          Expanded(flex: 3, child: playerClock),
-                          teamControls,
-                        ],
-                      ),
-              ],
-            ),
+          SafeArea(
+            child: (isMobile && isPortrait)
+                ? SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [controller, playerClock, teamControls],
+                    ),
+                  )
+                : Row(children: children),
           ),
         ],
       ),
