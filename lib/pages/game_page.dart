@@ -43,13 +43,6 @@ class GamePage extends ConsumerWidget {
       onAdd: notifier.addPlayer,
       onRemove: notifier.removePlayer,
     );
-    final children = [
-      Expanded(child: controller),
-      // In Column under SingleChildScrollView, Expanded would crash.
-      // We use it as-is, letting it take its natural height.
-      Expanded(child: playerClock),
-      Expanded(child: teamControls),
-    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -63,19 +56,47 @@ class GamePage extends ConsumerWidget {
           // use flutter_svg to display SVG background, ensuring it scales properly across devices.
           SvgPicture.asset(
             'assets/background/background_large_cave.svg',
-            fit: BoxFit.fitHeight,
+            fit: BoxFit.cover,
             height: double.infinity,
             width: double.infinity,
           ),
           SafeArea(
             child: (isMobile && isPortrait)
-                ? SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [controller, playerClock, teamControls],
-                    ),
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(flex: 2, child: controller),
+                      Spacer(),
+                      Flexible(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Spacer(),
+                            Flexible(flex: 3, child: playerClock),
+                            Spacer(),
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      Flexible(
+                        flex: 1,
+                        child: Row(
+                          children: [
+                            Flexible(flex: 4, child: teamControls),
+                            Spacer(flex: 6),
+                          ],
+                        ),
+                      ),
+                    ],
                   )
-                : Row(children: children),
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(flex: 1, child: controller),
+                      Flexible(flex: 3, child: playerClock),
+                      Flexible(flex: 1, child: teamControls),
+                    ],
+                  ),
           ),
         ],
       ),

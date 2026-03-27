@@ -39,7 +39,7 @@ class PlayerClock extends StatelessWidget {
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: player.color,
+                color: player.color.withOpacity(0.50),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
