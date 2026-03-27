@@ -31,6 +31,8 @@ jobs:
         run: flutter analyze
 
       - name: Run Flutter tests with coverage
+        id: tests
+        continue-on-error: true
         run: flutter test --coverage
 
       - name: Install lcov
@@ -71,3 +73,9 @@ jobs:
           git add README.md
           git diff --staged --quiet || git commit -m "chore: update coverage badge [skip ci]"
           git push
+
+      - name: Fail job if tests failed
+        if: steps.tests.outcome == 'failure'
+        run: |
+          echo "Tests failed — marking job as failed."
+          exit 1
