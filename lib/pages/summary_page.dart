@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
+import '../models/player.dart';
+import '../utils/duration_formatter.dart';
 
+/// Design Pattern: Presentation (Humble View)
+/// Purely displays the game summary data — no logic beyond formatting.
 class GameSummaryPage extends StatelessWidget {
   final Duration gameDuration;
-  final List<Duration> playerDurations;
-  final List<Color> playerColors;
+  final List<Player> players;
 
   const GameSummaryPage({
     super.key,
     required this.gameDuration,
-    required this.playerDurations,
-    required this.playerColors,
+    required this.players,
   });
-
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String minutes = twoDigits(duration.inMinutes.remainder(60));
-    String seconds = twoDigits(duration.inSeconds.remainder(60));
-    String centiseconds = twoDigits(
-      duration.inMilliseconds.remainder(1000) ~/ 10,
-    );
-    return "$minutes:$seconds:$centiseconds";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +50,7 @@ class GameSummaryPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            _formatDuration(gameDuration),
+                            formatDuration(gameDuration),
                             style: const TextStyle(
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
@@ -102,13 +94,14 @@ class GameSummaryPage extends StatelessWidget {
                           ),
                         ),
                       ],
-                      rows: List.generate(playerDurations.length, (index) {
-                        final duration = playerDurations[index];
-                        final percentage =
-                            (duration.inMilliseconds /
+                      rows: List.generate(players.length, (index) {
+                        final player = players[index];
+                        final percentage = gameDuration.inMilliseconds > 0
+                            ? (player.elapsed.inMilliseconds /
                                     gameDuration.inMilliseconds *
                                     100)
-                                .toStringAsFixed(1);
+                                .toStringAsFixed(1)
+                            : '0.0';
                         return DataRow(
                           cells: [
                             DataCell(
@@ -119,18 +112,23 @@ class GameSummaryPage extends StatelessWidget {
                                     width: 20,
                                     height: 20,
                                     decoration: BoxDecoration(
-                                      color: playerColors[index],
+                                      color: player.color,
                                       shape: BoxShape.circle,
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  Text('Player ${index + 1}'),
+                                  const SizedBox(width: 4),
+                                  Icon(player.avatar, size: 16),
+                                  const SizedBox(width: 4),
+                                  Text(player.name),
                                 ],
                               ),
                             ),
-                            DataCell(Text(_formatDuration(duration))),
+                            DataCell(Text(formatDuration(player.elapsed))),
                             DataCell(
-                              Text('$percentage%', textAlign: TextAlign.right),
+                              Text(
+                                '$percentage%',
+                                textAlign: TextAlign.right,
+                              ),
                             ),
                           ],
                         );

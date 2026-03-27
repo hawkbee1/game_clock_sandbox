@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'pages/game_page.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: MyApp()));
 }
 
+/// Root application widget.
+/// Design Pattern: Composition Root — wires together theme, routing, and DI.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -14,25 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Game Clock',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-        textTheme: TextTheme(
-          displayLarge: const TextStyle(
-            fontFeatures: [FontFeature.tabularFigures()],
-            fontSize: 48,
-            fontWeight: FontWeight.bold,
-          ),
-          bodyLarge: const TextStyle(
-            fontFeatures: [FontFeature.tabularFigures()],
-            fontSize: 36,
-            color: Colors.black87,
-          ),
-          bodyMedium: const TextStyle(
-            fontFeatures: [FontFeature.tabularFigures()],
-          ),
-        ),
-      ),
+      theme: AppTheme.light,
       home: const GamePage(),
     );
   }

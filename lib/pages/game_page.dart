@@ -1,150 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'summary_page.dart';
-import 'dart:async';
-import 'dart:math';
+import '../state/game_notifier.dart';
+import '../utils/duration_formatter.dart';
 
-class GamePage extends ConsumerStatefulWidget {
+/// Design Pattern: Presentation (Humble View)
+/// This widget is purely presentational — all state is read from [GameNotifier]
+/// via Riverpod, and all actions delegate to notifier methods.
+class GamePage extends ConsumerWidget {
   const GamePage({super.key});
 
   @override
-  ConsumerState<GamePage> createState() => _GamePageState();
-}
-
-class _GamePageState extends ConsumerState<GamePage> {
-  final List<Stopwatch> _playerStopwatches = [];
-  final List<Color> _playerColors = [];
-  final Stopwatch _gameStopwatch = Stopwatch();
-  final Random _random = Random();
-  int _currentPlayerIndex = 0;
-  int _numberOfPlayers = 5;
-  bool _isGameRunning = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeStopwatches();
-    _startTimer();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Color _generateRandomColor() {
-    return Color.fromRGBO(
-      _random.nextInt(128) + 128,
-      _random.nextInt(128) + 128,
-      _random.nextInt(128) + 128,
-      1,
-    );
-  }
-
-  void _initializeStopwatches() {
-    _playerStopwatches.clear();
-    _playerColors.clear();
-    for (int i = 0; i < _numberOfPlayers; i++) {
-      _playerStopwatches.add(Stopwatch());
-      _playerColors.add(_generateRandomColor());
-    }
-  }
-
-  void _startTimer() {
-    Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      if (mounted) setState(() {});
-    });
-  }
-
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String minutes = twoDigits(duration.inMinutes.remainder(60));
-    String seconds = twoDigits(duration.inSeconds.remainder(60));
-    String centiseconds = twoDigits(
-      duration.inMilliseconds.remainder(1000) ~/ 10,
-    );
-    return "$minutes:$seconds:$centiseconds";
-  }
-
-  void _startGame() {
-    setState(() {
-      _isGameRunning = true;
-      _gameStopwatch.start();
-      _playerStopwatches[_currentPlayerIndex].start();
-    });
-  }
-
-  void _pauseGame() {
-    setState(() {
-      _isGameRunning = false;
-      _gameStopwatch.stop();
-      _playerStopwatches[_currentPlayerIndex].stop();
-    });
-  }
-
-  void _resetGame() {
-    setState(() {
-      _isGameRunning = false;
-      _gameStopwatch.stop();
-      _gameStopwatch.reset();
-      for (var stopwatch in _playerStopwatches) {
-        stopwatch.stop();
-        stopwatch.reset();
-      }
-      _currentPlayerIndex = 0;
-    });
-  }
-
-  void _nextPlayer() {
-    if (!_isGameRunning) return;
-    setState(() {
-      _playerStopwatches[_currentPlayerIndex].stop();
-      _currentPlayerIndex = (_currentPlayerIndex + 1) % _numberOfPlayers;
-      _playerStopwatches[_currentPlayerIndex].start();
-    });
-  }
-
-  void _addPlayer() {
-    if (_numberOfPlayers < 10) {
-      setState(() {
-        _numberOfPlayers++;
-        _playerStopwatches.add(Stopwatch());
-        _playerColors.add(_generateRandomColor());
-      });
-    }
-  }
-
-  void _removePlayer() {
-    if (_numberOfPlayers > 2) {
-      setState(() {
-        _numberOfPlayers--;
-        _playerStopwatches.removeLast();
-        _playerColors.removeLast();
-        if (_currentPlayerIndex >= _numberOfPlayers) {
-          _currentPlayerIndex = _numberOfPlayers - 1;
-        }
-      });
-    }
-  }
-
-  void _finishGame() async {
-    // Stop the game timers and navigate to summary
-    _gameStopwatch.stop();
-    _playerStopwatches[_currentPlayerIndex].stop();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => GameSummaryPage(
-          gameDuration: _gameStopwatch.elapsed,
-          playerDurations: _playerStopwatches.map((s) => s.elapsed).toList(),
-          playerColors: _playerColors,
-        ),
-      ),
-    ).then((_) => _resetGame());
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final gameState = ref.watch(gameNotifierProvider);
+    final notifier = ref.read(gameNotifierProvider.notifier);
     final mediaQuery = MediaQuery.of(context);
     final isMobile =
         Theme.of(context).platform == TargetPlatform.iOS ||
@@ -163,36 +32,106 @@ class _GamePageState extends ConsumerState<GamePage> {
         children: [
           Expanded(
             child: (isMobile && isPortrait)
-                ? Column(children: [gameController(), clock(), team()])
-                : Row(children: [gameController(), clock(), team()]),
+                ? Column(
+                    children: [
+                      _GameController(
+                        gameElapsed: gameState.gameElapsed,
+                        isRunning: gameState.isRunning,
+                        onStartPause: gameState.isRunning
+                            ? notifier.pauseGame
+                            : notifier.startGame,
+                        onFinish: () => _finishGame(context, ref),
+                      ),
+                      _PlayerClock(
+                        player: gameState.currentPlayer,
+                        onTap: notifier.nextPlayer,
+                      ),
+                      _TeamControls(
+                        numberOfPlayers: gameState.numberOfPlayers,
+                        onAdd: notifier.addPlayer,
+                        onRemove: notifier.removePlayer,
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      _GameController(
+                        gameElapsed: gameState.gameElapsed,
+                        isRunning: gameState.isRunning,
+                        onStartPause: gameState.isRunning
+                            ? notifier.pauseGame
+                            : notifier.startGame,
+                        onFinish: () => _finishGame(context, ref),
+                      ),
+                      _PlayerClock(
+                        player: gameState.currentPlayer,
+                        onTap: notifier.nextPlayer,
+                      ),
+                      _TeamControls(
+                        numberOfPlayers: gameState.numberOfPlayers,
+                        onAdd: notifier.addPlayer,
+                        onRemove: notifier.removePlayer,
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),
     );
   }
 
-  Widget gameController() {
+  void _finishGame(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(gameNotifierProvider.notifier);
+    final finalState = notifier.finishGame();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GameSummaryPage(
+          gameDuration: finalState.gameElapsed,
+          players: finalState.players,
+        ),
+      ),
+    ).then((_) => notifier.resetGame());
+  }
+}
+
+/// Displays the total game timer and play/stop controls.
+class _GameController extends StatelessWidget {
+  final Duration gameElapsed;
+  final bool isRunning;
+  final VoidCallback onStartPause;
+  final VoidCallback onFinish;
+
+  const _GameController({
+    required this.gameElapsed,
+    required this.isRunning,
+    required this.onStartPause,
+    required this.onFinish,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            _formatDuration(_gameStopwatch.elapsed),
+            formatDuration(gameElapsed),
             style: Theme.of(context).textTheme.displayLarge,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: Icon(_isGameRunning ? Icons.pause : Icons.play_arrow),
-                onPressed: _isGameRunning ? _pauseGame : _startGame,
+                icon: Icon(isRunning ? Icons.pause : Icons.play_arrow),
+                onPressed: onStartPause,
                 color: Colors.blue,
                 iconSize: 48,
               ),
               IconButton(
                 icon: const Icon(Icons.stop),
-                onPressed: _finishGame,
+                onPressed: onFinish,
                 color: Colors.red,
                 iconSize: 48,
               ),
@@ -202,32 +141,46 @@ class _GamePageState extends ConsumerState<GamePage> {
       ),
     );
   }
+}
 
-  Widget clock() {
+/// Displays the current player's clock with tap-to-switch functionality.
+class _PlayerClock extends StatelessWidget {
+  final dynamic player;
+  final VoidCallback onTap;
+
+  const _PlayerClock({
+    required this.player,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (player == null) return const SizedBox.shrink();
+
     return Expanded(
       flex: 3,
       child: GestureDetector(
-        onTap: _nextPlayer,
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: _playerColors[_currentPlayerIndex],
+              color: player.color,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Icon(player.avatar, size: 32),
+                const SizedBox(height: 4),
                 Text(
-                  'Player: ${_currentPlayerIndex + 1}',
+                  player.name,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  _formatDuration(
-                    _playerStopwatches[_currentPlayerIndex].elapsed,
-                  ),
+                  formatDuration(player.elapsed),
                   style: Theme.of(context).textTheme.displayLarge,
                 ),
               ],
@@ -237,15 +190,29 @@ class _GamePageState extends ConsumerState<GamePage> {
       ),
     );
   }
+}
 
-  Widget team() {
+/// Controls for adding/removing players.
+class _TeamControls extends StatelessWidget {
+  final int numberOfPlayers;
+  final VoidCallback onAdd;
+  final VoidCallback onRemove;
+
+  const _TeamControls({
+    required this.numberOfPlayers,
+    required this.onAdd,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Number of players: $_numberOfPlayers',
+            'Number of players: $numberOfPlayers',
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
@@ -254,13 +221,13 @@ class _GamePageState extends ConsumerState<GamePage> {
             children: [
               IconButton(
                 icon: const Icon(Icons.remove),
-                onPressed: _removePlayer,
+                onPressed: onRemove,
                 color: Colors.blue,
                 iconSize: 32,
               ),
               IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: _addPlayer,
+                onPressed: onAdd,
                 color: Colors.blue,
                 iconSize: 32,
               ),
