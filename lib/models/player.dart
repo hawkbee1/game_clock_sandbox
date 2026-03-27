@@ -14,7 +14,7 @@ class Player {
     required this.id,
     required this.name,
     required this.color,
-    this.avatar = Icons.person,
+    this.avatar = Icons.directions_run,
     this.elapsed = Duration.zero,
   });
 
