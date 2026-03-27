@@ -78,7 +78,12 @@ class GameNotifier extends StateNotifier<GameState> {
     );
   }
 
-  /// Switches to the next player (circular). Only works while running.
+  /// Switches to the next player (circular).
+  ///
+  /// Design Pattern: Guard Clause (business-logic layer)
+  /// Returns immediately when the game is not running, ensuring no player
+  /// switch can occur while the clock is paused — even if a tap bypasses the
+  /// UI-layer guard (e.g. in tests or edge-case rapid inputs).
   void nextPlayer() {
     if (!state.isRunning) return;
 
