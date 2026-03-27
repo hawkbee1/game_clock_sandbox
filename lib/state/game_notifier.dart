@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/game_state.dart';
 import '../models/player.dart';
 import '../services/color_generator.dart';
+import '../services/random_color_generator.dart';
 
 /// Design Pattern: Observer (Riverpod StateNotifier)
 /// Encapsulates all game logic and exposes an immutable [GameState] stream.

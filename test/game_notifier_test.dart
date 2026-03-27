@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game_clock_sandbox/services/color_generator.dart';
+import 'package:game_clock_sandbox/services/fixed_color_generator.dart';
 import 'package:game_clock_sandbox/state/game_notifier.dart';
 
 /// Shared factory: creates a [GameNotifier] with predictable colours so tests

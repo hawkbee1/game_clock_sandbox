@@ -7,9 +7,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game_clock_sandbox/main.dart';
+import 'package:game_clock_sandbox/my_app.dart';
 import 'package:game_clock_sandbox/pages/game_page.dart';
-import 'package:game_clock_sandbox/services/color_generator.dart';
+import 'package:game_clock_sandbox/services/fixed_color_generator.dart';
 import 'package:game_clock_sandbox/state/game_notifier.dart';
 
 /// Helper that wraps a widget with [ProviderScope] and [MaterialApp].

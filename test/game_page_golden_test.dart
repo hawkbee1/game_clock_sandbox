@@ -5,7 +5,7 @@ import 'package:game_clock_sandbox/pages/game_page.dart';
 import 'package:game_clock_sandbox/state/game_notifier.dart';
 import 'package:game_clock_sandbox/models/game_state.dart';
 import 'package:game_clock_sandbox/models/player.dart';
-import 'package:game_clock_sandbox/services/color_generator.dart';
+import 'package:game_clock_sandbox/services/fixed_color_generator.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 
 /// Design Pattern: Factory Method (Custom Devices)
