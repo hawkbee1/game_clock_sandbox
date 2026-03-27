@@ -1,0 +1,81 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [game_clock]
+  pull_request:
+    branches: [game_clock]
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run Flutter analyze
+        run: flutter analyze
+
+      - name: Run Flutter tests with coverage
+        id: tests
+        continue-on-error: true
+        run: flutter test --coverage
+
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
+
+      - name: Extract coverage percentage
+        id: coverage
+        run: |
+          COVERAGE=$(lcov --summary coverage/lcov.info 2>&1 | awk '/lines.*:/{gsub(/%/,""); print $2}')
+          echo "percentage=${COVERAGE}" >> $GITHUB_OUTPUT
+          echo "Coverage: ${COVERAGE}%"
+
+      - name: Update README badges
+        if: github.event_name == 'push' && github.ref == 'refs/heads/game_clock'
+        run: |
+          COVERAGE="${{ steps.coverage.outputs.percentage }}"
+          if [ -z "$COVERAGE" ]; then
+            echo "Could not determine coverage, skipping badge update"
+            exit 0
+          fi
+          # Determine badge color based on coverage percentage
+          if awk "BEGIN {exit !($COVERAGE >= 80)}"; then
+            COLOR="brightgreen"
+          elif awk "BEGIN {exit !($COVERAGE >= 60)}"; then
+            COLOR="yellow"
+          else
+            COLOR="red"
+          fi
+          echo "Coverage: ${COVERAGE}%, Color: ${COLOR}"
+          # Update the coverage badge URL in README.md
+          sed -i "s|!\[Coverage\](https://img\.shields\.io/badge/coverage-[0-9.]*%25-[a-z]*)|![Coverage](https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR})|g" README.md
+
+      - name: Commit updated README
+        if: github.event_name == 'push' && github.ref == 'refs/heads/game_clock'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          git diff --staged --quiet || git commit -m "chore: update coverage badge [skip ci]"
+          git push
+
+      - name: Fail job if tests failed
+        if: steps.tests.outcome == 'failure'
+        run: |
+          echo "Tests failed — marking job as failed."
+          exit 1
