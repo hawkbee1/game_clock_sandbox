@@ -50,6 +50,13 @@ class DeviceConfigFactory {
     textScale: 1.5,
   );
 
+  static const Device defaulTestScreen = Device(
+    name: 'defaulTestScreen',
+    size: Size(1800, 2400),
+    devicePixelRatio: 1.0,
+    textScale: 1,
+  );
+
   static List<Device> get allDevices => [
     androidPhone,
     androidSmall,
@@ -57,6 +64,7 @@ class DeviceConfigFactory {
     iosPhone,
     iosSmall,
     iosTablet,
+    defaulTestScreen,
   ];
 }
 
