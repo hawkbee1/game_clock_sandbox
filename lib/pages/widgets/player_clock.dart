@@ -31,51 +31,48 @@ class PlayerClock extends StatelessWidget {
       // Passing null disables the tap entirely when the game is not running,
       // preventing any player switch while the clock is paused.
       onTap: isRunning ? onTap : null,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: player.color.withOpacity(0.50),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(player.avatar, size: 32),
-                  const SizedBox(height: 4),
-                  Text(
-                    player.name,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    formatDuration(player.elapsed),
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ],
-              ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: player.color.withOpacity(0.50),
+              borderRadius: BorderRadius.circular(16),
             ),
-            // Paused overlay — shown only when the game is not running.
-            if (!isRunning)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.35),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Icon(
-                    Icons.pause_circle_outline,
-                    size: 64,
-                    color: Colors.white70,
-                  ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(player.avatar, size: 32),
+                const SizedBox(height: 4),
+                Text(
+                  player.name,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  formatDuration(player.elapsed),
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
+              ],
+            ),
+          ),
+          // Paused overlay — shown only when the game is not running.
+          if (!isRunning)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.35),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(
+                  Icons.pause_circle_outline,
+                  size: 64,
+                  color: Colors.white70,
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

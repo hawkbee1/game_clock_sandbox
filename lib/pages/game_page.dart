@@ -43,62 +43,28 @@ class GamePage extends ConsumerWidget {
       onAdd: notifier.addPlayer,
       onRemove: notifier.removePlayer,
     );
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text(
-          'Clock for your games',
-          style: TextStyle(color: Colors.white),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // use flutter_svg to display SVG background, ensuring it scales properly across devices.
+            SvgPicture.asset(
+              'assets/background/background_large_cave.svg',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+            CustomMultiChildLayout(
+              delegate: GameLayoutDelegate(isMobile && isPortrait),
+              children: [
+                LayoutId(id: 'controller', child: controller),
+                LayoutId(id: 'player_clock', child: playerClock),
+                LayoutId(id: 'team_controls', child: teamControls),
+              ],
+            ),
+          ],
         ),
-      ),
-      body: Stack(
-        children: [
-          // use flutter_svg to display SVG background, ensuring it scales properly across devices.
-          SvgPicture.asset(
-            'assets/background/background_large_cave.svg',
-            fit: BoxFit.cover,
-            height: double.infinity,
-            width: double.infinity,
-          ),
-          SafeArea(
-            child: (isMobile && isPortrait)
-                ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(flex: 2, child: controller),
-                      Spacer(),
-                      Flexible(
-                        flex: 3,
-                        child: Row(
-                          children: [
-                            Spacer(),
-                            Flexible(flex: 3, child: playerClock),
-                            Spacer(),
-                          ],
-                        ),
-                      ),
-                      Spacer(),
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            Flexible(flex: 4, child: teamControls),
-                            Spacer(flex: 6),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(flex: 1, child: controller),
-                      Flexible(flex: 3, child: playerClock),
-                      Flexible(flex: 1, child: teamControls),
-                    ],
-                  ),
-          ),
-        ],
       ),
     );
   }
@@ -115,5 +81,71 @@ class GamePage extends ConsumerWidget {
         ),
       ),
     ).then((_) => notifier.resetGame());
+  }
+}
+
+class GameLayoutDelegate extends MultiChildLayoutDelegate {
+  final bool isPortraitMode;
+
+  GameLayoutDelegate(this.isPortraitMode);
+
+  @override
+  void performLayout(Size size) {
+    if (isPortraitMode) {
+      // Logic for portrait: Column-like
+      final controllerSize = layoutChild(
+        'controller',
+        BoxConstraints.loose(Size(size.width, size.height * 0.3)),
+      );
+      positionChild('controller', Offset.zero);
+
+      final clockSize = layoutChild(
+        'player_clock',
+        BoxConstraints.loose(Size(size.width * 0.7, size.height * 0.44)),
+      );
+      positionChild(
+        'player_clock',
+        Offset(
+          (size.width - clockSize.width) / 2,
+          controllerSize.height + size.height * 0.1,
+        ),
+      );
+
+      final controlsSize = layoutChild(
+        'team_controls',
+        BoxConstraints.loose(Size(size.width * 0.7, size.height * 0.2)),
+      );
+      positionChild(
+        'team_controls',
+        Offset(0, size.height - controlsSize.height),
+      );
+    } else {
+      // Logic for landscape: Row-like
+      final controllerSize = layoutChild(
+        'controller',
+        BoxConstraints.tight(Size(size.width * 0.3, size.height)),
+      );
+      positionChild('controller', Offset.zero);
+
+      final clockSize = layoutChild(
+        'player_clock',
+        BoxConstraints.tight(Size(size.width * 0.35, size.height)),
+      );
+      positionChild('player_clock', Offset(controllerSize.width, 0));
+
+      layoutChild(
+        'team_controls',
+        BoxConstraints.tight(Size(size.width * 0.3, size.height)),
+      );
+      positionChild(
+        'team_controls',
+        Offset(controllerSize.width + clockSize.width, 0),
+      );
+    }
+  }
+
+  @override
+  bool shouldRelayout(covariant GameLayoutDelegate oldDelegate) {
+    return oldDelegate.isPortraitMode != isPortraitMode;
   }
 }

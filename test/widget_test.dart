@@ -29,9 +29,7 @@ void main() {
   ) async {
     // Wrap with ProviderScope as required by Riverpod.
     await tester.pumpWidget(const ProviderScope(child: MyApp()));
-    // Verify the app bar title is present.
-    expect(find.text('Clock for your games'), findsOneWidget);
-
+    
     // Verify the game timer starts at 00:00:00.
     expect(find.text('00:00:00'), findsWidgets);
 

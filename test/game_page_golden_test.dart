@@ -57,6 +57,13 @@ class DeviceConfigFactory {
     textScale: 1,
   );
 
+  static const Device minimalTestScreen = Device(
+    name: 'minimalTestScreen',
+    size: Size(320, 480),
+    devicePixelRatio: 1.0,
+    textScale: 1,
+  );
+
   static List<Device> get portraitDevices => [
     androidPhone,
     androidSmall,
@@ -65,6 +72,7 @@ class DeviceConfigFactory {
     iosSmall,
     iosTablet,
     defaulTestScreen,
+    minimalTestScreen,
   ];
 
   static List<Device> get landscapeDevices => portraitDevices.map((device) {
