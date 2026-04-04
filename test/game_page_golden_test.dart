@@ -57,7 +57,14 @@ class DeviceConfigFactory {
     textScale: 1,
   );
 
-  static List<Device> get allDevices => [
+  static const Device minimalTestScreen = Device(
+    name: 'minimalTestScreen',
+    size: Size(320, 480),
+    devicePixelRatio: 1.0,
+    textScale: 1,
+  );
+
+  static List<Device> get portraitDevices => [
     androidPhone,
     androidSmall,
     androidTablet,
@@ -65,6 +72,23 @@ class DeviceConfigFactory {
     iosSmall,
     iosTablet,
     defaulTestScreen,
+    minimalTestScreen,
+  ];
+
+  static List<Device> get landscapeDevices => portraitDevices.map((device) {
+    return Device(
+      name: '${device.name}_landscape',
+      size: Size(device.size.height, device.size.width),
+      devicePixelRatio: device.devicePixelRatio,
+      textScale: device.textScale,
+      safeArea: device.safeArea,
+      brightness: device.brightness,
+    );
+  }).toList();
+
+  static List<Device> get allDevices => [
+    ...portraitDevices,
+    ...landscapeDevices,
   ];
 }
 
