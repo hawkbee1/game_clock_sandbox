@@ -1,7 +1,7 @@
 # game_clock_sandbox
 
 [![Tests](https://github.com/hawkbee1/game_clock_sandbox/actions/workflows/flutter_ci.yml/badge.svg?branch=game_clock)](https://github.com/hawkbee1/game_clock_sandbox/actions/workflows/flutter_ci.yml)
-![Coverage](https://img.shields.io/badge/coverage-71.0%25-yellow)
+![Coverage](https://img.shields.io/badge/coverage-70.5%25-yellow)
 
 A new Flutter project.
 
