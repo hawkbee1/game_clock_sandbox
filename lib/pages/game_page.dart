@@ -101,14 +101,11 @@ class GameLayoutDelegate extends MultiChildLayoutDelegate {
 
       final clockSize = layoutChild(
         'player_clock',
-        BoxConstraints.loose(Size(size.width * 0.7, size.height * 0.44)),
+        BoxConstraints.loose(Size(size.width * 0.9, size.height * 0.44)),
       );
       positionChild(
         'player_clock',
-        Offset(
-          (size.width - clockSize.width) / 2,
-          controllerSize.height + size.height * 0.1,
-        ),
+        Offset((size.width - clockSize.width) / 2, controllerSize.height),
       );
 
       final controlsSize = layoutChild(
