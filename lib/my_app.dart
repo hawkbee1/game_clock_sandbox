@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Game Clock',
+      title: 'Turn Tracker Pro',
       theme: AppTheme.light,
       home: const GamePage(),
     );
