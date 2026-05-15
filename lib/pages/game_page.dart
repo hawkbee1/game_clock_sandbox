@@ -126,9 +126,12 @@ class GameLayoutDelegate extends MultiChildLayoutDelegate {
 
       final clockSize = layoutChild(
         'player_clock',
-        BoxConstraints.tight(Size(size.width * 0.35, size.height)),
+        BoxConstraints.tight(Size(size.width * 0.64, size.height * 0.73)),
       );
-      positionChild('player_clock', Offset(controllerSize.width, 0));
+      positionChild(
+        'player_clock',
+        Offset(size.width * 0.2, size.height * 0.23),
+      );
 
       layoutChild(
         'team_controls',

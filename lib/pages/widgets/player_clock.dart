@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../utils/duration_formatter.dart';
 
 /// Displays the current player's clock with tap-to-switch functionality.
@@ -41,14 +42,9 @@ class PlayerClock extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(player.avatar, size: 32),
-                const SizedBox(height: 4),
-                Text(
-                  player.name,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+                Text(player.name, style: Theme.of(context).textTheme.bodyLarge),
                 const SizedBox(height: 8),
                 Text(
                   formatDuration(player.elapsed),
@@ -72,6 +68,18 @@ class PlayerClock extends StatelessWidget {
                 ),
               ),
             ),
+          Positioned(
+            bottom: 10,
+            child: SvgPicture.asset(
+              'assets/meeple.svg',
+              // fit: BoxFit.cover,
+              // 30 % of screen width, ensuring it scales appropriately across devices.
+              width: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? MediaQuery.of(context).size.height * 0.2
+                  : MediaQuery.of(context).size.width * 0.2,
+              // height: (MediaQuery.of(context).size.height * 0.25) / 1.69,
+            ),
+          ),
         ],
       ),
     );
